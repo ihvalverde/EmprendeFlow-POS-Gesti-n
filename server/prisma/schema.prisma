@@ -1,0 +1,189 @@
+// EmprendeFlow POS & Gestión
+// Base de datos: PostgreSQL (Neon)
+// Todos los montos se guardan como Decimal(10,2) en Soles Peruanos (PEN).
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  businessName String   @default("Mi Emprendimiento")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  categories        Category[]
+  products          Product[]
+  sales             Sale[]
+  expenses          Expense[]
+  expenseCategories ExpenseCategory[]
+  refreshTokens     RefreshToken[]
+}
+
+model RefreshToken {
+  id        String    @id @default(cuid())
+  tokenHash String    @unique
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  revokedAt DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([userId])
+}
+
+model Category {
+  id        String   @id @default(cuid())
+  name      String
+  color     String   @default("#4F46E5")
+  icon      String   @default("Tag")
+  archived  Boolean  @default(false)
+  parentId  String?
+  parent    Category?  @relation("CategoryTree", fields: [parentId], references: [id], onDelete: SetNull)
+  children  Category[] @relation("CategoryTree")
+  userId    String
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  products  Product[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  @@index([userId, parentId])
+  @@unique([userId, name, parentId])
+}
+
+model Product {
+  id                String    @id @default(cuid())
+  name              String
+  sku               String?
+  variant           String?
+  imageUrl          String?
+  costPrice         Decimal   @db.Decimal(10, 2)
+  listPrice         Decimal   @db.Decimal(10, 2)
+  stock             Int       @default(0)
+  lowStockThreshold Int       @default(2)
+  archived          Boolean   @default(false)
+  categoryId        String?
+  category          Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  userId            String
+  user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  saleItems    SaleItem[]
+  expenseItems ExpenseItem[]
+
+  @@unique([userId, sku])
+  @@index([userId, categoryId])
+  @@index([userId, archived])
+}
+
+model Sale {
+  id            String    @id @default(cuid())
+  code          String
+  customerName  String?
+  paymentMethod String    @default("EFECTIVO")
+  notes         String?
+  status        String    @default("COMPLETED") // COMPLETED | CANCELLED
+  subtotal      Decimal   @default(0) @db.Decimal(10, 2) // suma de precios de lista
+  totalDiscount Decimal   @default(0) @db.Decimal(10, 2) // rebajas otorgadas
+  total         Decimal   @default(0) @db.Decimal(10, 2) // dinero realmente cobrado
+  totalCost     Decimal   @default(0) @db.Decimal(10, 2) // costo real de lo vendido
+  profit        Decimal   @default(0) @db.Decimal(10, 2) // total - totalCost
+  itemCount     Int       @default(0)
+  soldAt        DateTime  @default(now())
+  cancelledAt   DateTime?
+  userId        String
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items         SaleItem[]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@unique([userId, code])
+  @@index([userId, soldAt])
+  @@index([userId, status])
+}
+
+model SaleItem {
+  id             String   @id @default(cuid())
+  saleId         String
+  sale           Sale     @relation(fields: [saleId], references: [id], onDelete: Cascade)
+  productId      String?
+  product        Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+  // Snapshot del producto al momento de la venta (histórico inmutable)
+  productName    String
+  variant        String?
+  categoryId     String?
+  categoryName   String   @default("Sin categoría")
+  categoryColor  String   @default("#64748B")
+  quantity       Int
+  listPrice      Decimal  @db.Decimal(10, 2)
+  finalSoldPrice Decimal  @db.Decimal(10, 2)
+  costPrice      Decimal  @db.Decimal(10, 2)
+  discount       Decimal  @default(0) @db.Decimal(10, 2)
+  lineTotal      Decimal  @db.Decimal(10, 2)
+  lineCost       Decimal  @db.Decimal(10, 2)
+  lineProfit     Decimal  @db.Decimal(10, 2)
+
+  @@index([saleId])
+  @@index([productId])
+  @@index([categoryId])
+}
+
+model Expense {
+  id                String           @id @default(cuid())
+  type              String // INVESTMENT (compra de stock) | OPERATING (gasto operativo)
+  description       String
+  amount            Decimal          @db.Decimal(10, 2)
+  supplier          String?
+  paymentMethod     String?
+  receiptUrl        String?
+  notes             String?
+  date              DateTime         @default(now())
+  expenseCategoryId String?
+  expenseCategory   ExpenseCategory? @relation(fields: [expenseCategoryId], references: [id], onDelete: SetNull)
+  userId            String
+  user              User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+  items             ExpenseItem[]
+
+  @@index([userId, date])
+  @@index([userId, type])
+}
+
+model ExpenseItem {
+  id          String   @id @default(cuid())
+  expenseId   String
+  expense     Expense  @relation(fields: [expenseId], references: [id], onDelete: Cascade)
+  productId   String?
+  product     Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+  productName String
+  quantity    Int
+  unitCost    Decimal  @db.Decimal(10, 2)
+  lineTotal   Decimal  @db.Decimal(10, 2)
+
+  @@index([expenseId])
+  @@index([productId])
+}
+
+model ExpenseCategory {
+  id       String  @id @default(cuid())
+  name     String
+  color    String  @default("#EF4444")
+  type     String  @default("OPERATING") // INVESTMENT | OPERATING | BOTH
+  archived Boolean @default(false)
+  userId   String
+  user     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expenses Expense[]
+
+  @@unique([userId, name])
+  @@index([userId])
+}

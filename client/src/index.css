@@ -1,0 +1,70 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: light;
+  }
+
+  .dark {
+    color-scheme: dark;
+  }
+
+  html {
+    -webkit-tap-highlight-color: transparent;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-slate-100/70 font-sans text-slate-800 antialiased dark:bg-slate-950 dark:text-slate-100;
+  }
+
+  ::selection {
+    @apply bg-indigo-200 text-indigo-900;
+  }
+
+  input[type='date']::-webkit-calendar-picker-indicator {
+    @apply cursor-pointer opacity-60;
+  }
+
+  .dark input[type='date']::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+  }
+}
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .thin-scrollbar::-webkit-scrollbar {
+    width: 7px;
+    height: 7px;
+  }
+
+  .thin-scrollbar::-webkit-scrollbar-thumb {
+    @apply rounded-full bg-slate-300 dark:bg-slate-700;
+  }
+
+  .thin-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .safe-top {
+    padding-top: env(safe-area-inset-top);
+  }
+
+  .text-balanced {
+    text-wrap: balance;
+  }
+}

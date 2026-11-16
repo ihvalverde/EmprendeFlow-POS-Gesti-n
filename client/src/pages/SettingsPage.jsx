@@ -1,0 +1,282 @@
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
+import {
+  Building2,
+  Check,
+  Download,
+  LogOut,
+  Mail,
+  Moon,
+  Save,
+  ShieldCheck,
+  Smartphone,
+  Sun,
+  User,
+} from 'lucide-react';
+import { api, apiErrorMessage, apiFieldErrors } from '../lib/api.js';
+import { cn, formatDate, initials } from '../lib/format.js';
+import { getInstallPrompt, promptInstall } from '../lib/pwa.js';
+import { useAuthStore } from '../stores/auth.js';
+import { useUiStore } from '../stores/ui.js';
+import PageHeader from '../components/ui/PageHeader.jsx';
+import { Card } from '../components/ui/Card.jsx';
+import Button from '../components/ui/Button.jsx';
+import { Input } from '../components/ui/Input.jsx';
+import ExportButton from '../components/ui/ExportButton.jsx';
+import Badge from '../components/ui/Badge.jsx';
+
+export default function SettingsPage() {
+  const navigate = useNavigate();
+  const user = useAuthStore((state) => state.user);
+  const setUser = useAuthStore((state) => state.setUser);
+  const clear = useAuthStore((state) => state.clear);
+  const theme = useUiStore((state) => state.theme);
+  const setTheme = useUiStore((state) => state.setTheme);
+
+  const [form, setForm] = useState({
+    name: user?.name || '',
+    businessName: user?.businessName || '',
+  });
+  const [errors, setErrors] = useState({});
+  const [saving, setSaving] = useState(false);
+  const [installable, setInstallable] = useState(Boolean(getInstallPrompt()));
+
+  useEffect(() => {
+    const handler = () => setInstallable(true);
+    window.addEventListener('pwa-installable', handler);
+    return () => window.removeEventListener('pwa-installable', handler);
+  }, []);
+
+  async function handleSave(event) {
+    event.preventDefault();
+    setSaving(true);
+    setErrors({});
+    try {
+      const { data } = await api.patch('/auth/me', {
+        name: form.name.trim(),
+        businessName: form.businessName.trim(),
+      });
+      setUser(data.user);
+      toast.success('Datos actualizados');
+    } catch (error) {
+      setErrors(apiFieldErrors(error));
+      toast.error(apiErrorMessage(error));
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  async function handleLogout() {
+    try {
+      await api.post('/auth/logout');
+    } catch {
+      // La sesión local se limpia de todos modos.
+    }
+    clear();
+    navigate('/login');
+  }
+
+  async function handleInstall() {
+    const installed = await promptInstall();
+    if (installed) {
+      setInstallable(false);
+      toast.success('¡EmprendeFlow instalado! Ya puedes usarlo como app.');
+    } else {
+      toast('Para instalarla, usa el menú del navegador → "Instalar app" o "Agregar a pantalla de inicio".', {
+        icon: '📲',
+      });
+    }
+  }
+
+  return (
+    <div className="space-y-5">
+      <PageHeader
+        title="Ajustes"
+        subtitle="Configura los datos de tu negocio, preferencias y descarga tus reportes."
+      />
+
+      <div className="grid items-start gap-4 lg:grid-cols-2">
+        <Card className="p-5">
+          <div className="flex items-center gap-3 border-b border-slate-100 pb-4 dark:border-slate-800">
+            <div className="grid h-12 w-12 place-items-center rounded-2xl bg-indigo-600 text-sm font-extrabold text-white">
+              {initials(user?.name)}
+            </div>
+            <div className="min-w-0">
+              <p className="truncate text-sm font-bold text-slate-900 dark:text-white">
+                {user?.name}
+              </p>
+              <p className="flex items-center gap-1 truncate text-xs text-slate-400">
+                <Mail className="h-3 w-3" /> {user?.email}
+              </p>
+            </div>
+            <Badge tone="emerald" dot className="ml-auto">
+              Activo
+            </Badge>
+          </div>
+
+          <form onSubmit={handleSave} className="mt-4 space-y-4">
+            <Input
+              label="Tu nombre"
+              value={form.name}
+              onChange={(event) => setForm((prev) => ({ ...prev, name: event.target.value }))}
+              error={errors.name}
+              required
+            />
+            <Input
+              label="Nombre del negocio"
+              value={form.businessName}
+              onChange={(event) =>
+                setForm((prev) => ({ ...prev, businessName: event.target.value }))
+              }
+              error={errors.businessName}
+              hint="Aparecerá en el panel y en tus reportes."
+              required
+            />
+            <div className="flex items-center justify-between">
+              <p className="text-[11px] text-slate-400">
+                Cuenta creada el {formatDate(user?.createdAt)}
+              </p>
+              <Button type="submit" loading={saving}>
+                <Save className="h-4 w-4" /> Guardar
+              </Button>
+            </div>
+          </form>
+        </Card>
+
+        <div className="space-y-4">
+          <Card className="p-5">
+            <h3 className="text-sm font-bold text-slate-900 dark:text-white">Apariencia</h3>
+            <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
+              Elige el tema que prefieras para trabajar.
+            </p>
+            <div className="mt-4 grid grid-cols-2 gap-2">
+              {[
+                { value: 'light', label: 'Modo claro', icon: Sun },
+                { value: 'dark', label: 'Modo oscuro', icon: Moon },
+              ].map((option) => (
+                <button
+                  key={option.value}
+                  type="button"
+                  onClick={() => setTheme(option.value)}
+                  className={cn(
+                    'flex items-center gap-2.5 rounded-xl border px-3 py-3 text-left transition',
+                    theme === option.value
+                      ? 'border-indigo-500 bg-indigo-50 text-indigo-700 dark:border-indigo-400 dark:bg-indigo-500/10 dark:text-indigo-300'
+                      : 'border-slate-200 bg-white text-slate-500 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400'
+                  )}
+                >
+                  <option.icon className="h-4 w-4" />
+                  <span className="text-xs font-bold">{option.label}</span>
+                  {theme === option.value && <Check className="ml-auto h-4 w-4" />}
+                </button>
+              ))}
+            </div>
+          </Card>
+
+          <Card className="p-5">
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <h3 className="text-sm font-bold text-slate-900 dark:text-white">
+                  Instalar como aplicación
+                </h3>
+                <p className="mt-0.5 text-xs leading-relaxed text-slate-500 dark:text-slate-400">
+                  Agrega EmprendeFlow a tu pantalla de inicio para vender más rápido desde el celular.
+                </p>
+              </div>
+              <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-sky-50 text-sky-600 dark:bg-sky-500/10 dark:text-sky-300">
+                <Smartphone className="h-5 w-5" />
+              </div>
+            </div>
+            <Button
+              variant={installable ? 'primary' : 'secondary'}
+              className="mt-4 w-full"
+              onClick={handleInstall}
+            >
+              <Download className="h-4 w-4" />
+              {installable ? 'Instalar EmprendeFlow' : 'Cómo instalar la app'}
+            </Button>
+            <p className="mt-2 flex items-center gap-1.5 text-[11px] text-slate-400">
+              <ShieldCheck className="h-3.5 w-3.5" /> Funciona en Android, iOS y desktop.
+            </p>
+          </Card>
+
+          <Card className="p-5">
+            <h3 className="text-sm font-bold text-slate-900 dark:text-white">Exportar mis datos</h3>
+            <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
+              Descarga reportes en CSV compatibles con Excel.
+            </p>
+            <div className="mt-4 space-y-2">
+              {[
+                {
+                  path: '/reports/inventory.csv',
+                  filename: 'inventario.csv',
+                  label: 'Inventario completo',
+                  hint: 'Stock, costos, márgenes y valores',
+                },
+                {
+                  path: '/reports/sales.csv?range=all',
+                  filename: 'ventas-historicas.csv',
+                  label: 'Historial de ventas',
+                  hint: 'Todas las ventas con rebajas y ganancias',
+                },
+                {
+                  path: '/reports/expenses.csv?range=all',
+                  filename: 'gastos-historicos.csv',
+                  label: 'Gastos e inversiones',
+                  hint: 'Movimientos de caja completos',
+                },
+              ].map((report) => (
+                <div
+                  key={report.path}
+                  className="flex items-center justify-between gap-3 rounded-xl border border-slate-200 px-3 py-2.5 dark:border-slate-700"
+                >
+                  <div className="min-w-0">
+                    <p className="text-xs font-bold text-slate-800 dark:text-slate-100">
+                      {report.label}
+                    </p>
+                    <p className="truncate text-[10px] text-slate-400">{report.hint}</p>
+                  </div>
+                  <ExportButton
+                    path={report.path}
+                    filename={report.filename}
+                    label="CSV"
+                    size="sm"
+                  />
+                </div>
+              ))}
+            </div>
+          </Card>
+
+          <Card className="p-5">
+            <h3 className="text-sm font-bold text-slate-900 dark:text-white">Cuenta</h3>
+            <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
+              Cierra sesión de forma segura en este dispositivo.
+            </p>
+            <Button variant="danger" className="mt-4" onClick={handleLogout}>
+              <LogOut className="h-4 w-4" /> Cerrar sesión
+            </Button>
+          </Card>
+        </div>
+      </div>
+
+      <Card className="p-5">
+        <div className="flex flex-wrap items-center gap-3">
+          <div className="grid h-10 w-10 place-items-center rounded-xl bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-300">
+            <Building2 className="h-5 w-5" />
+          </div>
+          <div className="min-w-0 flex-1">
+            <p className="text-xs font-bold text-slate-800 dark:text-slate-100">
+              EmprendeFlow POS &amp; Gestión
+            </p>
+            <p className="text-[11px] text-slate-400">
+              Sistema adaptable a cualquier rubro · Moneda Soles peruanos (PEN) · Zona horaria
+              America/Lima
+            </p>
+          </div>
+          <Badge tone="indigo">v1.0.0</Badge>
+        </div>
+      </Card>
+    </div>
+  );
+}

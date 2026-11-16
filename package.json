@@ -1,0 +1,20 @@
+{
+  "name": "emprendeflow-pos",
+  "private": true,
+  "version": "1.0.0",
+  "description": "EmprendeFlow POS & Gestión - PWA de punto de venta, inventario y finanzas para emprendimientos",
+  "scripts": {
+    "install:all": "npm install --prefix server && npm install --prefix client",
+    "db:generate": "npm run prisma:generate --prefix server",
+    "db:push": "npm run prisma:push --prefix server",
+    "db:seed": "npm run seed --prefix server",
+    "dev": "concurrently -n API,WEB -c blue,magenta \"npm run dev --prefix server\" \"npm run dev --prefix client\"",
+    "dev:server": "npm run dev --prefix server",
+    "dev:client": "npm run dev --prefix client",
+    "build": "npm run build --prefix client",
+    "start": "npm start --prefix server"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0"
+  }
+}
