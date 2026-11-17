@@ -57,13 +57,13 @@ export default function ProfileMenu() {
         aria-haspopup="menu"
         aria-expanded={open}
         aria-label="Menú de cuenta"
-        className="flex items-center gap-2 rounded-xl border border-slate-200 bg-white py-1 pl-1 pr-2.5 transition hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:hover:bg-slate-800"
+        className="flex min-w-0 items-center gap-2 rounded-xl border border-slate-200 bg-white py-1 pl-1 pr-2.5 transition hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:hover:bg-slate-800"
       >
         <div className="grid h-8 w-8 place-items-center rounded-lg bg-indigo-600 text-[11px] font-extrabold text-white">
           {initials(user?.name)}
         </div>
-        <div className="hidden max-w-[130px] flex-col items-start text-left md:flex">
-          <p className="truncate text-[11px] font-bold leading-tight text-slate-800 dark:text-slate-100">
+        <div className="hidden min-w-0 max-w-[200px] flex-col items-start text-left md:flex">
+          <p className="truncate w-full text-[11px] font-bold leading-tight text-slate-800 dark:text-slate-100">
             {user?.name}
           </p>
           <p className="truncate text-[10px] leading-tight text-slate-400">Mi cuenta</p>
