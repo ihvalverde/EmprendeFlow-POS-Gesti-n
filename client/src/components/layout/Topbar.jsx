@@ -39,7 +39,7 @@ export default function Topbar({ onOpenMenu = () => {} }) {
               <Logo compact />
             </button>
           </div>
-          <div className="hidden min-w-0 lg:block">
+          <div className="hidden min-w-0 pl-6 lg:block">
             <h2 className="truncate text-base font-extrabold text-slate-900 dark:text-white">
               {page.title}
             </h2>

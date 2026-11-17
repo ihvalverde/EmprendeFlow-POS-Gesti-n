@@ -62,7 +62,7 @@ export default function ProfileMenu() {
         <div className="grid h-8 w-8 place-items-center rounded-lg bg-indigo-600 text-[11px] font-extrabold text-white">
           {initials(user?.name)}
         </div>
-        <div className="hidden max-w-[130px] md:block">
+        <div className="hidden max-w-[130px] flex-col items-start text-left md:flex">
           <p className="truncate text-[11px] font-bold leading-tight text-slate-800 dark:text-slate-100">
             {user?.name}
           </p>
