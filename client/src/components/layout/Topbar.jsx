@@ -2,9 +2,10 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { Moon, Plus, ReceiptText, Sun } from 'lucide-react';
 import { useUiStore } from '../../stores/ui.js';
 import { useAuthStore } from '../../stores/auth.js';
-import { formatDate, initials } from '../../lib/format.js';
+import { formatDate } from '../../lib/format.js';
 import Logo from '../Logo.jsx';
 import Button from '../ui/Button.jsx';
+import ProfileMenu from './ProfileMenu.jsx';
 
 const TITLES = {
   '/': { title: 'Dashboard financiero', subtitle: 'Tu negocio en números, sin complicaciones' },
@@ -15,7 +16,7 @@ const TITLES = {
   '/ajustes': { title: 'Ajustes', subtitle: 'Tu cuenta, datos y preferencias' },
 };
 
-export default function Topbar() {
+export default function Topbar({ onOpenMenu = () => {} }) {
   const location = useLocation();
   const navigate = useNavigate();
   const theme = useUiStore((state) => state.theme);
@@ -29,7 +30,14 @@ export default function Topbar() {
       <div className="flex h-16 items-center justify-between gap-3 px-4 sm:px-6 lg:px-8">
         <div className="flex min-w-0 items-center gap-3">
           <div className="lg:hidden">
-            <Logo compact />
+            <button
+              type="button"
+              onClick={onOpenMenu}
+              aria-label="Abrir menú"
+              className="rounded-xl focus:outline-none focus-visible:ring-4 focus-visible:ring-indigo-500/20"
+            >
+              <Logo compact />
+            </button>
           </div>
           <div className="hidden min-w-0 lg:block">
             <h2 className="truncate text-base font-extrabold text-slate-900 dark:text-white">
@@ -69,17 +77,7 @@ export default function Topbar() {
             {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
           </Button>
 
-          <div className="flex items-center gap-2 rounded-xl border border-slate-200 bg-white py-1 pl-1 pr-2.5 dark:border-slate-800 dark:bg-slate-900">
-            <div className="grid h-8 w-8 place-items-center rounded-lg bg-indigo-600 text-[11px] font-extrabold text-white">
-              {initials(user?.name)}
-            </div>
-            <div className="hidden max-w-[130px] md:block">
-              <p className="truncate text-[11px] font-bold leading-tight text-slate-800 dark:text-slate-100">
-                {user?.name}
-              </p>
-              <p className="truncate text-[10px] leading-tight text-slate-400">Mi cuenta</p>
-            </div>
-          </div>
+          <ProfileMenu />
         </div>
       </div>
     </header>

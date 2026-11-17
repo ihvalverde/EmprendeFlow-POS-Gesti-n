@@ -76,7 +76,7 @@ export default function ExportButton({ path, filename, label = 'Exportar', varia
       {open && (
         <div
           role="menu"
-          className="absolute right-0 top-full z-30 mt-2 w-64 overflow-hidden rounded-2xl border border-slate-200 bg-white p-1.5 shadow-xl shadow-slate-900/10 dark:border-slate-700 dark:bg-slate-900"
+          className="absolute right-0 top-full z-30 mt-2 w-56 overflow-hidden rounded-2xl border border-slate-200 bg-white p-1.5 shadow-xl shadow-slate-900/10 sm:w-64 dark:border-slate-700 dark:bg-slate-900"
         >
           <button
             type="button"
