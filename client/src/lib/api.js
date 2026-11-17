@@ -85,7 +85,9 @@ export function apiFieldErrors(error) {
 
 export async function downloadExport(path, filename) {
   const response = await api.get(path, { responseType: 'blob' });
-  const blob = new Blob([response.data], { type: 'text/csv;charset=utf-8;' });
+  const contentType = response.headers['content-type'];
+  const fallbackType = /\.pdf$/i.test(filename) ? 'application/pdf' : 'text/csv;charset=utf-8;';
+  const blob = new Blob([response.data], { type: contentType || fallbackType });
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
   link.href = url;

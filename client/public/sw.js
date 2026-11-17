@@ -1,10 +1,14 @@
-const CACHE_NAME = 'emprendeflow-v1';
+const CACHE_NAME = 'emprendeflow-v2';
 const APP_SHELL = [
   '/',
   '/index.html',
   '/manifest.webmanifest',
+  '/logo.png',
   '/icons/icon-192.png',
   '/icons/icon-512.png',
+  '/icons/icon-maskable-192.png',
+  '/icons/icon-maskable-512.png',
+  '/icons/apple-touch-icon.png',
 ];
 
 self.addEventListener('install', (event) => {
