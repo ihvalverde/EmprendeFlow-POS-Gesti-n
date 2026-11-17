@@ -61,7 +61,7 @@ Frontend y API se despliegan como **dos proyectos independientes en Vercel**.
 - Resumen de ventas, inversión, gastos y ganancia real.
 - Gráficos de evolución, métodos de pago y categorías.
 - Filtros por rango de fechas y categoría.
-- Exportación de reportes en CSV.
+- Exportación de reportes en CSV y PDF.
 
 ### 🛒 Ventas
 - Registro de ventas con múltiples productos.
@@ -75,7 +75,7 @@ Frontend y API se despliegan como **dos proyectos independientes en Vercel**.
 - Costo, precio de lista, margen y valor de inventario.
 - Alertas de stock bajo y productos agotados.
 - Subida de imágenes a Vercel Blob.
-- Búsqueda, filtros y exportación CSV.
+- Búsqueda, filtros y exportación CSV/PDF.
 
 ### 🏷️ Categorías
 - Categorías y subcategorías.
@@ -88,13 +88,13 @@ Frontend y API se despliegan como **dos proyectos independientes en Vercel**.
 - Reconciliación automática de stock al crear, editar o eliminar.
 - Categorías de gasto personalizadas.
 - Comprobantes de compra almacenados en Blob.
-- Filtros, detalle y exportación CSV.
+- Filtros, detalle y exportación CSV/PDF.
 
 ### 📱 PWA y experiencia
 - Instalable en Android, iOS y escritorio.
 - Service Worker con cache del shell y estrategia offline básica.
 - Tema claro y oscuro.
-- Diseño responsive con navegación móvil.
+- Diseño responsive con drawer lateral y menú de perfil.
 - Accesos directos a “Registrar venta” y “Gastos”.
 
 ### 🔐 Seguridad
@@ -111,11 +111,11 @@ Frontend y API se despliegan como **dos proyectos independientes en Vercel**.
 | Capa | Tecnologías |
 |------|-------------|
 | **Frontend** | React 18, Vite 5, React Router 6, Tailwind CSS 3, Zustand, Axios, Recharts, Lucide React, React Hot Toast |
-| **Backend** | Node.js, Express 4, Prisma 5, Zod, JWT, bcryptjs, Helmet, CORS, Multer, Morgan |
+| **Backend** | Node.js, Express 4, Prisma 5, Zod, JWT, bcryptjs, Helmet, CORS, Multer, Morgan, PDFKit |
 | **Base de datos** | PostgreSQL en Neon |
 | **Archivos** | Vercel Blob privado |
 | **Deploy** | Vercel (frontend + API serverless) |
-| **Calidad** | ESLint implícito por convenciones, builds de Vite, validación Zod |
+| **Calidad** | Builds de Vite y validación Zod |
 
 ---
 
@@ -305,7 +305,7 @@ EmprendeFlow-POS-Gesti-n/
 | `GET/POST` | `/expenses/categories` | Categorías de gasto |
 | `GET` | `/dashboard/summary` | Métricas del dashboard |
 | `GET` | `/dashboard/charts` | Datos para gráficos |
-| `GET` | `/reports/*.csv` | Exportar inventario, ventas o gastos |
+| `GET` | `/reports/*.{csv,pdf}` | Exportar inventario, ventas o gastos |
 | `POST` | `/uploads` | Subir imagen a Vercel Blob |
 | `GET` | `/media/*` | Servir imagen privada |
 | `GET` | `/health` | Estado de la API |
