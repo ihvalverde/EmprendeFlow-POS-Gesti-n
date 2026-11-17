@@ -122,5 +122,3 @@ export const Textarea = forwardRef(function Textarea(
     </FieldWrapper>
   );
 });
-
-export default Input;

@@ -5,7 +5,7 @@ import { round2 } from '../utils/money.js';
 import { serializeSale } from '../utils/serializers.js';
 import { getRange } from '../utils/dates.js';
 
-export const PAYMENT_METHODS = ['EFECTIVO', 'YAPE', 'PLIN', 'TRANSFERENCIA', 'TARJETA'];
+const PAYMENT_METHODS = ['EFECTIVO', 'YAPE', 'PLIN', 'TRANSFERENCIA', 'TARJETA'];
 
 const optionalText = z
   .union([z.string().trim().max(300), z.null()])

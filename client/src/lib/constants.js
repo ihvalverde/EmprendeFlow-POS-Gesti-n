@@ -121,8 +121,6 @@ export const CATEGORY_COLORS = [
   '#64748B', '#0F172A',
 ];
 
-export const CHART_COLORS = ['#4F46E5', '#F59E0B', '#10B981', '#0EA5E9', '#EF4444', '#8B5CF6', '#EC4899', '#14B8A6'];
-
 export const RANGE_OPTIONS = [
   { value: 'today', label: 'Hoy' },
   { value: 'week', label: 'Semana' },

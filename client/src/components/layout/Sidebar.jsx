@@ -15,7 +15,7 @@ import { cn, initials } from '../../lib/format.js';
 import { useAuthStore } from '../../stores/auth.js';
 import Logo from '../Logo.jsx';
 
-export const NAV_ITEMS = [
+const NAV_ITEMS = [
   { to: '/', label: 'Dashboard', icon: LayoutDashboard, end: true },
   { to: '/ventas', label: 'Ventas', icon: ReceiptText },
   { to: '/productos', label: 'Productos', icon: Package },

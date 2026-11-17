@@ -61,7 +61,11 @@ export default function ExpenseFormModal({
         date: expense.date ? limaInputDate(new Date(expense.date)) : limaInputDate(),
         notes: expense.notes || '',
         receiptUrl: expense.receiptUrl || '',
-        items: [],
+        items: (expense.items || []).map((item) => ({
+          productId: item.productId || '',
+          quantity: String(item.quantity),
+          unitCost: String(Number(item.unitCost).toFixed(2)),
+        })),
       });
     } else {
       setForm(emptyForm(defaultType));
@@ -161,7 +165,7 @@ export default function ExpenseFormModal({
       receiptUrl: form.receiptUrl || null,
       notes: form.notes.trim() || null,
       date: form.date ? new Date(`${form.date}T12:00:00-05:00`).toISOString() : undefined,
-      ...(!isEditing && preparedItems.length > 0 ? { items: preparedItems } : {}),
+      ...(isInvestment ? { items: preparedItems } : {}),
     };
 
     try {
@@ -341,15 +345,18 @@ export default function ExpenseFormModal({
           />
         </div>
 
-        {isInvestment && !isEditing && (
+        {isInvestment && (
           <div className="rounded-2xl border border-rose-200/70 bg-rose-50/40 p-4 dark:border-rose-500/20 dark:bg-rose-500/5">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <div>
                 <p className="flex items-center gap-1.5 text-xs font-extrabold text-slate-900 dark:text-white">
-                  <Boxes className="h-4 w-4 text-rose-500" /> Vincular productos y aumentar stock
+                  <Boxes className="h-4 w-4 text-rose-500" />{' '}
+                  {isEditing ? 'Ajustar productos y stock' : 'Vincular productos y aumentar stock'}
                 </p>
                 <p className="mt-0.5 text-[11px] text-slate-500 dark:text-slate-400">
-                  Opcional: registra las unidades compradas y su costo para actualizar el inventario.
+                  {isEditing
+                    ? 'Ajusta las unidades compradas; el stock se actualizará según la diferencia.'
+                    : 'Opcional: registra las unidades compradas y su costo para actualizar el inventario.'}
                 </p>
               </div>
               <Button type="button" variant="secondary" size="sm" onClick={addItem}>
@@ -452,12 +459,6 @@ export default function ExpenseFormModal({
               </div>
             )}
           </div>
-        )}
-
-        {isEditing && expense?.items?.length > 0 && (
-          <p className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-[11px] text-slate-500 dark:border-slate-700 dark:bg-slate-800/40">
-            Este movimiento tiene stock vinculado. Los ítems no se editan aquí para proteger tu inventario.
-          </p>
         )}
 
         <ImageUpload

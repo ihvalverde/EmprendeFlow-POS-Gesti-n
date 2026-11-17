@@ -30,7 +30,7 @@ export function hashToken(token) {
   return crypto.createHash('sha256').update(token).digest('hex');
 }
 
-export function refreshCookieOptions() {
+function refreshCookieOptions() {
   return {
     httpOnly: true,
     secure: env.cookieSecure,

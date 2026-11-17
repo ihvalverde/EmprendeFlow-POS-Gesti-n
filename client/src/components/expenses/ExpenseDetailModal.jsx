@@ -4,6 +4,7 @@ import {
   CreditCard,
   ExternalLink,
   FileImage,
+  Pencil,
   Store,
   Trash2,
   X,
@@ -15,12 +16,22 @@ import Modal from '../ui/Modal.jsx';
 import Button from '../ui/Button.jsx';
 import Badge from '../ui/Badge.jsx';
 
-export default function ExpenseDetailModal({ open, expense, onClose, onRequestDelete }) {
+export default function ExpenseDetailModal({
+  open,
+  expense,
+  onClose,
+  onRequestEdit,
+  onRequestDelete,
+}) {
   if (!expense) return null;
 
   const type = EXPENSE_TYPES[expense.type] || EXPENSE_TYPES.OPERATING;
   const payment = PAYMENT_MAP[expense.paymentMethod];
   const itemsTotal = (expense.items || []).reduce((sum, item) => sum + item.lineTotal, 0);
+  const itemsUnits = (expense.items || []).reduce(
+    (sum, item) => sum + (Number(item.quantity) || 0),
+    0
+  );
 
   return (
     <Modal
@@ -38,9 +49,16 @@ export default function ExpenseDetailModal({ open, expense, onClose, onRequestDe
               </Button>
             )}
           </div>
-          <Button variant="secondary" onClick={onClose}>
-            <X className="h-4 w-4" /> Cerrar
-          </Button>
+          <div className="flex items-center justify-end gap-2">
+            {onRequestEdit && (
+              <Button onClick={() => onRequestEdit(expense)}>
+                <Pencil className="h-4 w-4" /> Editar
+              </Button>
+            )}
+            <Button variant="secondary" onClick={onClose}>
+              <X className="h-4 w-4" /> Cerrar
+            </Button>
+          </div>
         </div>
       }
     >
@@ -101,10 +119,10 @@ export default function ExpenseDetailModal({ open, expense, onClose, onRequestDe
           <div className="rounded-xl border border-slate-200 dark:border-slate-700">
             <div className="flex items-center justify-between border-b border-slate-100 px-3 py-2.5 dark:border-slate-800">
               <p className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-slate-400">
-                <Boxes className="h-3.5 w-3.5" /> Stock vinculado
+                <Boxes className="h-3.5 w-3.5" /> Unidades vinculadas
               </p>
               <p className="text-[11px] font-bold text-slate-500 dark:text-slate-400">
-                {formatMoney(itemsTotal)}
+                {itemsUnits} uds · {formatMoney(itemsTotal)}
               </p>
             </div>
             <table className="w-full text-left text-xs">

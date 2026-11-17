@@ -40,7 +40,7 @@ export function serializeProduct(product) {
   };
 }
 
-export function serializeSaleItem(item) {
+function serializeSaleItem(item) {
   return {
     ...item,
     listPrice: num(item.listPrice),
@@ -66,7 +66,7 @@ export function serializeSale(sale) {
   };
 }
 
-export function serializeExpenseItem(item) {
+function serializeExpenseItem(item) {
   return {
     ...item,
     unitCost: num(item.unitCost),

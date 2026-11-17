@@ -3,6 +3,7 @@ import toast from 'react-hot-toast';
 import {
   Boxes,
   Eye,
+  Pencil,
   Plus,
   Receipt,
   Settings2,
@@ -55,6 +56,13 @@ const TYPE_OPTIONS = [
   { value: 'OPERATING', label: 'Operativos' },
 ];
 
+function expenseUnits(expense) {
+  return (expense.items || []).reduce(
+    (sum, item) => sum + (Number(item.quantity) || 0),
+    0
+  );
+}
+
 export default function ExpensesPage() {
   const [type, setType] = useState('ALL');
   const [search, setSearch] = useState('');
@@ -63,6 +71,7 @@ export default function ExpensesPage() {
   const [categoryId, setCategoryId] = useState('');
 
   const [formOpen, setFormOpen] = useState(false);
+  const [editingExpense, setEditingExpense] = useState(null);
   const [defaultType, setDefaultType] = useState('OPERATING');
   const [managerOpen, setManagerOpen] = useState(false);
   const [selectedExpense, setSelectedExpense] = useState(null);
@@ -105,8 +114,20 @@ export default function ExpensesPage() {
   const hasFilters = Boolean(search || categoryId || type !== 'ALL' || range !== 'month');
 
   function openCreate() {
+    setEditingExpense(null);
     setDefaultType(type === 'ALL' ? 'OPERATING' : type);
     setFormOpen(true);
+  }
+
+  function openEdit(expense) {
+    setSelectedExpense(null);
+    setEditingExpense(expense);
+    setFormOpen(true);
+  }
+
+  function closeForm() {
+    setFormOpen(false);
+    setEditingExpense(null);
   }
 
   function afterChange() {
@@ -260,8 +281,8 @@ export default function ExpensesPage() {
                     <th className="px-4 py-3 font-bold">Fecha</th>
                     <th className="px-4 py-3 text-right font-bold">Monto</th>
                     <th className="px-4 py-3 font-bold">Pago</th>
-                    <th className="px-4 py-3 text-center font-bold">Stock</th>
-                    <th className="px-4 py-3 text-right font-bold">Ver</th>
+                    <th className="px-4 py-3 text-center font-bold">Unidades</th>
+                    <th className="px-4 py-3 text-right font-bold">Acciones</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -318,18 +339,28 @@ export default function ExpensesPage() {
                                 : 'bg-slate-100 text-slate-400 dark:bg-slate-800 dark:text-slate-500'
                             )}
                           >
-                            <Boxes className="h-3 w-3" /> {expense.items?.length || 0}
+                            <Boxes className="h-3 w-3" /> {expenseUnits(expense)}
                           </span>
                         </td>
-                        <td className="px-4 py-3 text-right">
-                          <button
-                            type="button"
-                            onClick={() => setSelectedExpense(expense)}
-                            className="grid h-8 w-8 place-items-center rounded-lg text-slate-400 transition hover:bg-indigo-50 hover:text-indigo-600 dark:hover:bg-indigo-500/10"
-                            title="Ver detalle"
-                          >
-                            <Eye className="h-4 w-4" />
-                          </button>
+                        <td className="px-4 py-3">
+                          <div className="flex items-center justify-end gap-1">
+                            <button
+                              type="button"
+                              onClick={() => setSelectedExpense(expense)}
+                              className="grid h-8 w-8 place-items-center rounded-lg text-slate-400 transition hover:bg-indigo-50 hover:text-indigo-600 dark:hover:bg-indigo-500/10"
+                              title="Ver detalle"
+                            >
+                              <Eye className="h-4 w-4" />
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => openEdit(expense)}
+                              className="grid h-8 w-8 place-items-center rounded-lg text-slate-400 transition hover:bg-indigo-50 hover:text-indigo-600 dark:hover:bg-indigo-500/10"
+                              title="Editar movimiento"
+                            >
+                              <Pencil className="h-4 w-4" />
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     );
@@ -373,15 +404,26 @@ export default function ExpensesPage() {
                   </div>
                   <div className="mt-2 flex items-center gap-2 border-t border-slate-100 pt-2 dark:border-slate-800">
                     <span className="text-[10px] text-slate-400">
-                      {expense.items?.length || 0} producto(s) vinculados
+                      {expense.items?.length
+                        ? `${expense.items.length} producto${expense.items.length === 1 ? '' : 's'} · ${expenseUnits(expense)} uds`
+                        : 'Sin stock vinculado'}
                     </span>
-                    <button
-                      type="button"
-                      onClick={() => setSelectedExpense(expense)}
-                      className="ml-auto inline-flex items-center gap-1 rounded-lg bg-slate-100 px-2 py-1 text-[10px] font-bold text-slate-600 dark:bg-slate-800 dark:text-slate-300"
-                    >
-                      <Eye className="h-3 w-3" /> Detalle
-                    </button>
+                    <div className="ml-auto flex items-center gap-1.5">
+                      <button
+                        type="button"
+                        onClick={() => setSelectedExpense(expense)}
+                        className="inline-flex items-center gap-1 rounded-lg bg-slate-100 px-2 py-1 text-[10px] font-bold text-slate-600 dark:bg-slate-800 dark:text-slate-300"
+                      >
+                        <Eye className="h-3 w-3" /> Detalle
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => openEdit(expense)}
+                        className="inline-flex items-center gap-1 rounded-lg bg-indigo-50 px-2 py-1 text-[10px] font-bold text-indigo-600 dark:bg-indigo-500/10 dark:text-indigo-300"
+                      >
+                        <Pencil className="h-3 w-3" /> Editar
+                      </button>
+                    </div>
                   </div>
                 </Card>
               );
@@ -398,7 +440,8 @@ export default function ExpensesPage() {
 
       <ExpenseFormModal
         open={formOpen}
-        onClose={() => setFormOpen(false)}
+        onClose={closeForm}
+        expense={editingExpense}
         expenseCategories={categories.data || []}
         products={products.data || []}
         defaultType={defaultType}
@@ -409,6 +452,7 @@ export default function ExpensesPage() {
         open={Boolean(selectedExpense)}
         expense={selectedExpense}
         onClose={() => setSelectedExpense(null)}
+        onRequestEdit={openEdit}
         onRequestDelete={(expense) => setDeleteTarget(expense)}
       />
 

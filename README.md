@@ -1,259 +1,402 @@
-# EmprendeFlow POS & Gestión
+<div align="center">
 
-PWA full-stack para gestionar un emprendimiento: punto de venta, inventario, inversiones, gastos operativos, reportes y dashboard financiero. Todos los montos se manejan en **soles peruanos (PEN)** y las fechas se agrupan con la zona horaria **America/Lima**.
+# 💠 EmprendeFlow POS & Gestión
 
-## Características
+**Vende, controla tu stock y descubre cuánto ganas de verdad.**
 
-- Registro, inicio de sesión con JWT de acceso y refresh token rotado en cookie httpOnly.
-- Dashboard con ventas, ganancia bruta, ganancia neta, inversión, gastos operativos, margen, ticket promedio y comparación con el periodo anterior.
-- Gráficos de últimos 6 meses, ventas por categoría, top productos por unidades e ingresos, descuentos y métodos de pago.
-- POS rápido: búsqueda, carrito, stock, precio final con rebaja, ganancia estimada y métodos de pago.
-- Ventas con detalle, filtros por rango, búsqueda y anulación con restauración de stock.
-- Inventario con SKU automático, variantes, imagen, stock, stock bajo, categorías y archivado lógico.
-- Categorías jerárquicas (padre/hijo) con archivado en cascada.
-- Gastos operativos e inversiones; las inversiones pueden vincular productos y sumar stock automáticamente.
-- Categorías de gasto dinámicas, filtros, detalle y eliminación con reversión de stock.
-- Exportación CSV de inventario, ventas y gastos.
-- Tema claro/oscuro, diseño responsive con navegación inferior móvil y PWA instalable.
-- API REST multi-tenant: todos los datos se aíslan por `userId`.
+[![Frontend](https://img.shields.io/badge/Frontend-Vercel-000000?style=for-the-badge&logo=vercel)](https://emprende-flow-pos-gesti-n.vercel.app/)
+[![PWA](https://img.shields.io/badge/PWA-Instalable-4F46E5?style=for-the-badge&logo=pwa)](https://emprende-flow-pos-gesti-n.vercel.app/)
+[![API](https://img.shields.io/badge/API-Express%20%2B%20Prisma-10B981?style=for-the-badge&logo=express)](#-arquitectura)
+[![Base de datos](https://img.shields.io/badge/Neon-PostgreSQL-00E599?style=for-the-badge&logo=postgresql)](https://neon.tech/)
+[![Licencia](https://img.shields.io/badge/Licencia-Privada-F59E0B?style=for-the-badge)](#-licencia)
 
-## Stack
+[![React](https://img.shields.io/badge/React-18-61DAFB?style=flat-square&logo=react&logoColor=black)](https://react.dev/)
+[![Vite](https://img.shields.io/badge/Vite-5-646CFF?style=flat-square&logo=vite&logoColor=white)](https://vitejs.dev/)
+[![Tailwind](https://img.shields.io/badge/Tailwind-3-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
+[![Node](https://img.shields.io/badge/Node.js-18%2B-339933?style=flat-square&logo=nodedotjs&logoColor=white)](https://nodejs.org/)
 
-| Capa | Tecnología |
-| --- | --- |
-| Frontend | React 18, Vite 5, React Router 6, Zustand, Axios, Tailwind CSS 3, Recharts, Lucide |
-| Backend | Node.js, Express 4, Prisma 5, Zod, JWT, bcryptjs, Multer, Helmet |
-| Base de datos | PostgreSQL 14+ / Neon |
-| PWA | Web App Manifest + Service Worker propios |
+</div>
 
-## Estructura
+---
+
+## ✨ ¿Qué es EmprendeFlow?
+
+Una **PWA de punto de venta y gestión financiera** pensada para emprendedores peruanos. Reúne ventas, inventario, inversiones y gastos en un solo lugar, con montos en **soles peruanos (PEN)** y una experiencia que funciona desde el celular.
+
+> *Tu negocio claro, tu ganancia real.*
+
+---
+
+## 🏗️ Arquitectura
+
+Frontend y API se despliegan como **dos proyectos independientes en Vercel**.
 
 ```text
-.
-├─ client/                  # React + Vite + Tailwind
-│  ├─ public/               # manifest, service worker, iconos PWA
-│  └─ src/
-│     ├─ components/        # UI, layout, modales de ventas/productos/gastos
-│     ├─ hooks/
-│     ├─ lib/               # Axios, formato de moneda/fechas, constantes
-│     ├─ pages/             # Dashboard, Ventas, Productos, Categorías, Gastos, Ajustes
-│     └─ stores/            # auth y UI (Zustand)
-├─ server/                  # Express + Prisma
-│  ├─ api/index.js          # entrypoint serverless para Vercel
-│  ├─ prisma/               # schema y seed
-│  └─ src/
-│     ├─ controllers/
-│     ├─ middleware/
-│     ├─ routes/
-│     ├─ services/          # métricas del dashboard
-│     └─ utils/
-├─ package.json             # scripts raíz
-└─ README.md
+┌────────────────────────────────────────────────────────────┐
+│                         VERCEL                             │
+│                                                            │
+│   ┌──────────────────────┐      ┌───────────────────────┐  │
+│   │  Frontend PWA        │      │  API Serverless       │  │
+│   │  React + Vite        │─────▶│  Express + Prisma     │  │
+│   │  Tailwind + Zustand  │      │  JWT + Zod            │  │
+│   └──────────────────────┘      └───────────┬───────────┘  │
+└─────────────────────────────────────────────┼──────────────┘
+                                              │
+                            ┌─────────────────┴─────────────────┐
+                            │  Neon PostgreSQL                  │
+                            │  Vercel Blob (imágenes privadas)  │
+                            └───────────────────────────────────┘
 ```
 
-## Requisitos
+- **Frontend:** `client/` → React, Vite, Tailwind y PWA instalable.
+- **API:** `server/` → Express serverless, Prisma y PostgreSQL.
+- **Almacenamiento:** Vercel Blob privado para fotos de productos y comprobantes.
+- **Autenticación:** access token JWT + refresh token en cookie `httpOnly`.
 
-- Node.js 20 o superior.
-- npm.
-- PostgreSQL local, Docker o una base Neon.
+---
 
-## Inicio rápido local
+## 🚀 Funcionalidades
 
-1. Instala dependencias de la raíz, servidor y cliente:
+### 📊 Dashboard
+- Resumen de ventas, inversión, gastos y ganancia real.
+- Gráficos de evolución, métodos de pago y categorías.
+- Filtros por rango de fechas y categoría.
+- Exportación de reportes en CSV.
+
+### 🛒 Ventas
+- Registro de ventas con múltiples productos.
+- Precio final editable y cálculo automático de descuentos.
+- Descuento de stock transaccional.
+- Anulación de venta con restauración de stock.
+- Historial con búsqueda, filtros y detalle.
+
+### 📦 Productos e inventario
+- CRUD de productos con imagen, SKU, variante y categoría.
+- Costo, precio de lista, margen y valor de inventario.
+- Alertas de stock bajo y productos agotados.
+- Subida de imágenes a Vercel Blob.
+- Búsqueda, filtros y exportación CSV.
+
+### 🏷️ Categorías
+- Categorías y subcategorías.
+- Color e icono personalizables.
+- Conteo de productos y archivado seguro.
+
+### 💰 Gastos e inversiones
+- Separación entre **inversión en mercadería** y **gasto operativo**.
+- Ítems de inversión vinculados a productos.
+- Reconciliación automática de stock al crear, editar o eliminar.
+- Categorías de gasto personalizadas.
+- Comprobantes de compra almacenados en Blob.
+- Filtros, detalle y exportación CSV.
+
+### 📱 PWA y experiencia
+- Instalable en Android, iOS y escritorio.
+- Service Worker con cache del shell y estrategia offline básica.
+- Tema claro y oscuro.
+- Diseño responsive con navegación móvil.
+- Accesos directos a “Registrar venta” y “Gastos”.
+
+### 🔐 Seguridad
+- Contraseñas con `bcryptjs`.
+- Access tokens de corta duración y refresh tokens rotativos.
+- Cookies `httpOnly`, `secure` y `sameSite` configurables.
+- Validación de datos con Zod.
+- Helmet, CORS restringido y límite de subida de imágenes.
+
+---
+
+## 🧰 Stack Tecnológico
+
+| Capa | Tecnologías |
+|------|-------------|
+| **Frontend** | React 18, Vite 5, React Router 6, Tailwind CSS 3, Zustand, Axios, Recharts, Lucide React, React Hot Toast |
+| **Backend** | Node.js, Express 4, Prisma 5, Zod, JWT, bcryptjs, Helmet, CORS, Multer, Morgan |
+| **Base de datos** | PostgreSQL en Neon |
+| **Archivos** | Vercel Blob privado |
+| **Deploy** | Vercel (frontend + API serverless) |
+| **Calidad** | ESLint implícito por convenciones, builds de Vite, validación Zod |
+
+---
+
+## 🛠️ Desarrollo Local
+
+### Requisitos
+
+- Node.js 18 o superior
+- Cuenta de Neon o PostgreSQL local
+- Token de Vercel Blob para probar subidas de imágenes
+
+### 1. Instalar dependencias
 
 ```bash
-npm install
+git clone https://github.com/ihvalverde/EmprendeFlow-POS-Gesti-n.git
+cd EmprendeFlow-POS-Gesti-n
 npm run install:all
 ```
 
-2. Crea `server/.env` a partir de `server/.env.example` y configura `DATABASE_URL`, `JWT_ACCESS_SECRET` y `JWT_REFRESH_SECRET`.
+### 2. Configurar el backend
 
-3. Prepara la base de datos y carga datos demo:
+Copia `server/.env.example` a `server/.env` y completa los valores:
+
+```env
+DATABASE_URL="postgresql://usuario:password@host/neondb?sslmode=require"
+JWT_ACCESS_SECRET="una-cadena-larga-y-aleatoria"
+JWT_REFRESH_SECRET="otra-cadena-larga-y-aleatoria"
+BLOB_READ_WRITE_TOKEN="vercel_blob_rw_..."
+NODE_ENV=development
+PORT=4000
+CLIENT_ORIGIN=http://localhost:5173
+COOKIE_SAMESITE=lax
+COOKIE_SECURE=false
+```
+
+### 3. Preparar la base de datos
 
 ```bash
+npm run db:generate
 npm run db:push
+```
+
+Opcionalmente, carga datos de demostración:
+
+```bash
 npm run db:seed
 ```
 
-4. Levanta API y cliente:
+### 4. Configurar el frontend
+
+Copia `client/.env.example` a `client/.env` y déjalo así para usar el proxy de Vite:
+
+```env
+VITE_API_URL=
+```
+
+En producción, apunta a la API desplegada:
+
+```env
+VITE_API_URL=https://emprende-flow-pos-api.vercel.app/api/v1
+```
+
+### 5. Levantar todo
 
 ```bash
 npm run dev
 ```
 
-- Cliente: http://localhost:5173
-- API: http://localhost:4000/api/v1/health
+| Servicio | URL local |
+|----------|-----------|
+| Frontend | `http://localhost:5173` |
+| API | `http://localhost:4000/api/v1` |
+| Salud API | `http://localhost:4000/api/v1/health` |
 
-### Usuario demo
+### Cuenta demo
+
+La pantalla de login incluye el botón **“Usar demo”**. También puedes entrar con:
 
 ```text
 Correo: demo@emprendeflow.pe
 Contraseña: demo1234
 ```
 
-El seed crea 4 categorías, 6 categorías de gasto, 12 productos, 70 ventas y 25 movimientos de caja.
+---
 
-### PostgreSQL con Docker
+## 📜 Scripts
 
-```bash
-docker run --name emprendeflow-db \
-  -e POSTGRES_PASSWORD=postgres \
-  -e POSTGRES_DB=emprendeflow \
-  -p 5433:5432 \
-  -d postgres:16
+Ejecutados desde la raíz del proyecto:
+
+| Script | Descripción |
+|--------|-------------|
+| `npm run install:all` | Instala dependencias de `server` y `client` |
+| `npm run dev` | Levanta API y frontend en paralelo |
+| `npm run dev:server` | Solo API con `node --watch` |
+| `npm run dev:client` | Solo frontend con Vite |
+| `npm run db:generate` | Genera el cliente Prisma |
+| `npm run db:push` | Sincroniza el esquema con la base de datos |
+| `npm run db:seed` | Carga datos demo |
+| `npm run build` | Compila el frontend |
+| `npm start` | Inicia la API en producción |
+
+---
+
+## 📁 Estructura del Proyecto
+
+```text
+EmprendeFlow-POS-Gesti-n/
+├── 📁 client/                     # Frontend React + PWA
+│   ├── 📁 public/
+│   │   ├── manifest.webmanifest
+│   │   ├── sw.js
+│   │   └── icons/
+│   ├── 📁 src/
+│   │   ├── 📁 components/
+│   │   │   ├── categories/
+│   │   │   ├── expenses/
+│   │   │   ├── layout/
+│   │   │   ├── products/
+│   │   │   ├── sales/
+│   │   │   └── ui/
+│   │   ├── 📁 hooks/
+│   │   ├── 📁 lib/
+│   │   ├── 📁 pages/
+│   │   ├── 📁 stores/
+│   │   ├── App.jsx
+│   │   ├── index.css
+│   │   └── main.jsx
+│   ├── vercel.json
+│   ├── vite.config.js
+│   └── package.json
+│
+├── 📁 server/                     # API Express + Prisma
+│   ├── 📁 api/
+│   │   └── index.js               # Entrypoint serverless de Vercel
+│   ├── 📁 prisma/
+│   │   ├── schema.prisma
+│   │   └── seed.js
+│   ├── 📁 src/
+│   │   ├── 📁 config/
+│   │   ├── 📁 controllers/
+│   │   ├── 📁 lib/
+│   │   ├── 📁 middleware/
+│   │   ├── 📁 routes/
+│   │   ├── 📁 services/
+│   │   ├── 📁 utils/
+│   │   ├── app.js
+│   │   └── index.js
+│   ├── 📁 uploads/                # Compatibilidad con imágenes antiguas
+│   ├── vercel.json
+│   └── package.json
+│
+├── package.json
+└── README.md
 ```
 
-```env
-DATABASE_URL="postgresql://postgres:postgres@localhost:5433/emprendeflow?schema=public"
-```
+---
 
-## Variables de entorno
+## 🌐 URLs de Producción
 
-### `server/.env`
+| Servicio | URL |
+|----------|-----|
+| **App / PWA** | [emprende-flow-pos-gesti-n.vercel.app](https://emprende-flow-pos-gesti-n.vercel.app/) |
+| **API** | `https://emprende-flow-pos-api.vercel.app/api/v1` |
+| **Salud API** | `https://emprende-flow-pos-api.vercel.app/api/v1/health` |
 
-| Variable | Obligatoria | Descripción |
-| --- | --- | --- |
-| `DATABASE_URL` | Sí | Conexión PostgreSQL/Neon. En Neon agrega `?sslmode=require`. |
-| `JWT_ACCESS_SECRET` | Sí en producción | Secreto largo y aleatorio para access tokens. |
-| `JWT_REFRESH_SECRET` | Sí en producción | Secreto largo y aleatorio para refresh tokens. |
-| `JWT_ACCESS_EXPIRES` | No | Duración del access token. Default `15m`. |
-| `JWT_REFRESH_EXPIRES` | No | Duración del refresh token. Default `7d`. |
-| `PORT` | No | Puerto del servidor. Default `4000`. |
-| `NODE_ENV` | No | `development` o `production`. |
-| `CLIENT_ORIGIN` | Sí en producción | Origen(es) permitidos por CORS, separados por coma. |
-| `COOKIE_SAMESITE` | No | `lax` en local; `none` con frontend y API en dominios distintos. |
-| `COOKIE_SECURE` | No | `false` en local; `true` en producción HTTPS. |
-| `BLOB_READ_WRITE_TOKEN` | Sí en producción | Token de un store **privado** de Vercel Blob para fotos y comprobantes. |
-| `UPLOAD_DIR` | No | Solo compatibilidad con imágenes locales antiguas. |
+> La URL de la API debe coincidir con `VITE_API_URL` en el proyecto frontend. Si Vercel asigna otro dominio, actualiza la variable y vuelve a desplegar.
 
-### `client/.env`
+---
 
-| Variable | Descripción |
-| --- | --- |
-| `VITE_API_URL` | URL completa de la API, por ejemplo `https://tu-api.vercel.app/api/v1`. Si está vacía se usa `/api/v1` y el proxy de Vite. |
+## 🔌 API Principal
 
-## Scripts
+| Método | Ruta | Descripción |
+|--------|------|-------------|
+| `POST` | `/auth/register` | Registrar emprendimiento |
+| `POST` | `/auth/login` | Iniciar sesión |
+| `POST` | `/auth/refresh` | Renovar access token |
+| `POST` | `/auth/logout` | Cerrar sesión |
+| `GET/PATCH` | `/auth/me` | Perfil del usuario |
+| `GET/POST` | `/categories` | Listar o crear categorías |
+| `PATCH/DELETE` | `/categories/:id` | Editar o archivar categoría |
+| `GET/POST` | `/products` | Listar o crear productos |
+| `GET/PATCH/DELETE` | `/products/:id` | Detalle, edición y borrado |
+| `GET/POST` | `/sales` | Historial y registro de ventas |
+| `POST` | `/sales/:id/cancel` | Anular venta y restaurar stock |
+| `GET/POST` | `/expenses` | Listar o crear gastos/inversiones |
+| `PATCH/DELETE` | `/expenses/:id` | Editar o eliminar gasto |
+| `GET/POST` | `/expenses/categories` | Categorías de gasto |
+| `GET` | `/dashboard/summary` | Métricas del dashboard |
+| `GET` | `/dashboard/charts` | Datos para gráficos |
+| `GET` | `/reports/*.csv` | Exportar inventario, ventas o gastos |
+| `POST` | `/uploads` | Subir imagen a Vercel Blob |
+| `GET` | `/media/*` | Servir imagen privada |
+| `GET` | `/health` | Estado de la API |
 
-| Comando | Acción |
-| --- | --- |
-| `npm run install:all` | Instala servidor y cliente. |
-| `npm run db:generate` | Genera Prisma Client. |
-| `npm run db:push` | Sincroniza el schema con la base de datos. |
-| `npm run db:seed` | Carga datos demo. |
-| `npm run dev` | Ejecuta API y cliente en paralelo. |
-| `npm run dev:server` | Solo API con `node --watch`. |
-| `npm run dev:client` | Solo Vite. |
-| `npm run build` | Build de producción del cliente. |
-| `npm start` | Inicia el servidor Express. |
+---
 
-## API
+## 🗄️ Modelo de Datos
 
-Base: `/api/v1`
+Principales entidades de Prisma:
 
-| Recurso | Endpoints principales |
-| --- | --- |
-| Salud | `GET /health` |
-| Auth | `POST /auth/register`, `POST /auth/login`, `POST /auth/refresh`, `POST /auth/logout`, `GET /auth/me`, `PATCH /auth/me` |
-| Categorías | `GET/POST /categories`, `PATCH/DELETE /categories/:id` |
-| Productos | `GET/POST /products`, `GET/PATCH/DELETE /products/:id` |
-| Ventas | `GET/POST /sales`, `GET /sales/:id`, `POST /sales/:id/cancel` |
-| Gastos | `GET/POST /expenses`, `GET/PATCH/DELETE /expenses/:id` |
-| Categorías de gasto | `GET/POST /expenses/categories`, `PATCH/DELETE /expenses/categories/:id` |
-| Dashboard | `GET /dashboard/summary`, `GET /dashboard/charts` |
-| Reportes | `GET /reports/inventory.csv`, `/reports/sales.csv`, `/reports/expenses.csv` |
-| Imágenes | `POST /uploads` con campo multipart `file`; `GET /media/assets/...` sirve el blob privado |
+- **User** — emprendimiento y credenciales.
+- **RefreshToken** — sesiones renovables con hash.
+- **Category** — árbol de categorías y subcategorías.
+- **Product** — inventario, costos, precios y stock.
+- **Sale / SaleItem** — ventas con snapshot histórico del producto.
+- **Expense / ExpenseItem** — gastos e inversiones con ítems vinculados.
+- **ExpenseCategory** — categorías específicas para gastos.
 
-## Reglas de negocio
+Cada usuario tiene sus propios datos. Las operaciones de ventas e inversiones actualizan stock dentro de transacciones.
 
-- Cada usuario solo puede acceder a sus propios datos.
-- Los importes se guardan como `Decimal(10,2)` y se redondean a dos decimales.
-- Una venta descuenta stock dentro de una transacción; su anulación lo restaura.
-- Una inversión con productos suma stock; al eliminarla se revierte el stock.
-- `SaleItem` conserva snapshots de nombre, variante, categoría y precios para que el historial no cambie si luego se edita o archiva el producto.
-- `SaleItem.discount` es la rebaja total de la línea y `Sale.totalDiscount = subtotal - total`.
-- El filtro por categoría del dashboard solo afecta métricas de ventas; inversiones y gastos se muestran de forma global.
-- Archivar una categoría padre archiva también sus subcategorías; restaurarla las restaura.
-- El dashboard compara el periodo seleccionado con el periodo inmediatamente anterior de igual duración.
-- Los rangos `today`, `week`, `month` y `all` se calculan en `America/Lima`.
+---
 
-## PWA
+## ☁️ Deploy en Vercel
 
-- Manifest: `client/public/manifest.webmanifest`.
-- Service worker: `client/public/sw.js` (network-first para navegación, cache-first para assets).
-- Iconos: `client/public/icons/`.
-- El botón de instalación aparece en el topbar cuando el navegador emite `beforeinstallprompt`.
+### API
 
-## Despliegue en Vercel + Neon
-
-### 1. Base de datos Neon
-
-1. Crea un proyecto en Neon y una base PostgreSQL.
-2. Copia la cadena de conexión con `sslmode=require`.
-3. Configura `DATABASE_URL` en el proyecto de la API.
-4. Desde local, apuntando a Neon, ejecuta:
-
-```bash
-npm run db:push
-npm run db:seed
-```
-
-### 2. API en Vercel
-
-1. Importa el repositorio y selecciona **Root Directory**: `server`.
+1. Crear un proyecto en Vercel con **Root Directory: `server`**.
 2. Framework Preset: **Other**.
-3. En **Storage > Blob**, crea un store con acceso **Private**, conéctalo al proyecto de la API y copia `BLOB_READ_WRITE_TOKEN`. La API sirve las imágenes mediante `/api/v1/media/*`; el store debe ser privado porque el código usa `access: 'private'`.
-4. Configura las variables:
-   - `DATABASE_URL`
-   - `JWT_ACCESS_SECRET`
-   - `JWT_REFRESH_SECRET`
-   - `BLOB_READ_WRITE_TOKEN`
-   - `NODE_ENV=production`
-   - `CLIENT_ORIGIN=https://tu-frontend.vercel.app`
-   - `COOKIE_SAMESITE=none`
-   - `COOKIE_SECURE=true`
-5. El archivo `server/vercel.json` enruta `/api/v1/*` y `/uploads/*` a `api/index.js`.
-6. Verifica `https://tu-api.vercel.app/api/v1/health`.
+3. Agregar las variables de `server/.env.vercel` en **Settings → Environment Variables**.
+4. Desplegar. Vercel usará `server/vercel.json` y `server/api/index.js`.
 
-> Si usas un dominio de preview de Vercel, agrégalo también en `CLIENT_ORIGIN` separado por coma.
-
-### 3. Frontend en Vercel
-
-1. Importa el mismo repositorio y selecciona **Root Directory**: `client`.
-2. Framework Preset: **Vite**.
-3. Variable de entorno:
-   - `VITE_API_URL=https://tu-api.vercel.app/api/v1`
-4. El archivo `client/vercel.json` reescribe las rutas de React Router hacia `index.html`.
-5. Verifica el login, la persistencia de sesión y la instalación PWA.
-
-### 4. Cookies entre dominios
-
-Con frontend y API en dominios distintos, el refresh token necesita:
+Variables mínimas de producción:
 
 ```env
+DATABASE_URL=postgresql://...
+JWT_ACCESS_SECRET=...
+JWT_REFRESH_SECRET=...
+BLOB_READ_WRITE_TOKEN=...
+NODE_ENV=production
+CLIENT_ORIGIN=https://emprende-flow-pos-gesti-n.vercel.app
 COOKIE_SAMESITE=none
 COOKIE_SECURE=true
 ```
 
-Ambos sitios deben servirse por HTTPS. El backend ya usa `trust proxy` para funcionar detrás de Vercel.
+> En Vercel no agregues comillas alrededor de los valores.
 
-## Limitaciones y notas de producción
+### Frontend
 
-- **Imágenes:** las fotos de productos y comprobantes se guardan en **Vercel Blob** (`BLOB_READ_WRITE_TOKEN`, store privado). El navegador las redimensiona y comprime antes de subirlas; el límite final es 4 MB. La API las entrega con URLs aleatorias e inmutables desde `/api/v1/media/*`; quien tenga el enlace puede verlas, así que no las compartas fuera del equipo. Las imágenes locales antiguas se sirven desde `/uploads` solo por compatibilidad.
-- **Migraciones:** el proyecto usa `prisma db push`. Para equipos o producción formal, genera migraciones con `prisma migrate dev` y despliega con `prisma migrate deploy`.
-- **Secretos:** no reutilices los valores de `server/.env.example` en producción.
-- **Refresh tokens:** se rotan y se revocan al hacer logout. Los tokens expirados se limpian al iniciar sesión.
-- **Seed:** las ventas demo no descuentan stock; es data de demostración, no una simulación contable exacta.
-- **Archivos ignorados:** `server/.env`, `node_modules`, `dist` y los uploads locales están en `.gitignore`.
+1. Crear un proyecto con **Root Directory: `client`**.
+2. Framework Preset: **Vite**.
+3. Agregar `VITE_API_URL` en **Settings → Environment Variables**.
+4. Build Command: `npm run build`.
+5. Output Directory: `dist`.
+6. Desplegar.
 
-## Verificación
-
-```bash
-npm run build --prefix client
-npm start --prefix server
+```env
+VITE_API_URL=https://emprende-flow-pos-api.vercel.app/api/v1
 ```
 
-También puedes comprobar la API con:
+### Verificación
 
-```bash
-curl http://localhost:4000/api/v1/health
+```text
+GET https://emprende-flow-pos-api.vercel.app/api/v1/health
+→ { "status": "ok", "service": "EmprendeFlow API" }
 ```
+
+Luego abre la app, inicia sesión y confirma que el dashboard carga datos.
+
+---
+
+## 🔒 Seguridad y Variables de Entorno
+
+- Los archivos `.env` y `.env.*` están ignorados por Git.
+- Solo se versionan los `.env.example`.
+- Nunca subas tokens de Neon, Vercel Blob o secretos JWT al repositorio.
+- Usa secretos largos y aleatorios en producción.
+- Si una credencial se comparte o expone, rótala y actualiza las variables en Vercel.
+- En producción, con frontend y API en dominios distintos, usa `COOKIE_SAMESITE=none` y `COOKIE_SECURE=true`.
+
+---
+
+## 📝 Licencia
+
+Proyecto privado — **EmprendeFlow POS & Gestión © 2026**
+
+---
+
+<div align="center">
+
+**Hecho para emprendedores peruanos** 🇵🇪
+
+*Menos planillas, más claridad para tu negocio.* ✨
+
+</div>

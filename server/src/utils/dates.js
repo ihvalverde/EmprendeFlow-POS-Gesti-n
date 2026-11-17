@@ -1,4 +1,4 @@
-export const LIMA_TZ = 'America/Lima';
+const LIMA_TZ = 'America/Lima';
 const LIMA_OFFSET_MS = 5 * 60 * 60 * 1000;
 
 const MONTHS_ES = [
@@ -6,7 +6,7 @@ const MONTHS_ES = [
   'jul', 'ago', 'sep', 'oct', 'nov', 'dic',
 ];
 
-export function limaISODate(date = new Date()) {
+function limaISODate(date = new Date()) {
   return new Intl.DateTimeFormat('en-CA', {
     timeZone: LIMA_TZ,
     year: 'numeric',
@@ -15,7 +15,7 @@ export function limaISODate(date = new Date()) {
   }).format(date);
 }
 
-export function limaStartOfDay(isoDate) {
+function limaStartOfDay(isoDate) {
   return new Date(`${isoDate}T00:00:00-05:00`);
 }
 

@@ -11,6 +11,12 @@ const optionalText = z
   .optional()
   .transform((value) => (value == null || value === '' ? null : value));
 
+const expenseItemSchema = z.object({
+  productId: z.string().trim().min(1),
+  quantity: z.coerce.number().int().min(1).max(100000),
+  unitCost: z.coerce.number().min(0).max(9999999),
+});
+
 export const expenseSchema = z.object({
   type: z.enum(['INVESTMENT', 'OPERATING'], { message: 'Tipo de gasto inválido' }),
   description: z.string().trim().min(2, 'Describe el gasto').max(200),
@@ -24,17 +30,7 @@ export const expenseSchema = z.object({
     .union([z.string().trim().min(1), z.null()])
     .optional()
     .transform((value) => value || null),
-  items: z
-    .array(
-      z.object({
-        productId: z.string().trim().min(1),
-        quantity: z.coerce.number().int().min(1).max(100000),
-        unitCost: z.coerce.number().min(0).max(9999999),
-      })
-    )
-    .max(100)
-    .optional()
-    .default([]),
+  items: z.array(expenseItemSchema).max(100).optional().default([]),
 });
 
 export const expenseUpdateSchema = z
@@ -50,6 +46,7 @@ export const expenseUpdateSchema = z
       .union([z.string().trim().min(1), z.null()])
       .optional()
       .transform((value) => value || null),
+    items: z.array(expenseItemSchema).max(100).optional(),
   })
   .partial();
 
@@ -61,6 +58,45 @@ async function assertExpenseCategory(categoryId, type, userId) {
     throw new AppError(400, 'La categoría seleccionada no corresponde al tipo de movimiento.');
   }
   return category;
+}
+
+async function prepareInvestmentItems(tx, items, userId, extraProductIds = []) {
+  const requestedIds = [...new Set(items.map((item) => item.productId))];
+  const productIds = [...new Set([...requestedIds, ...extraProductIds])];
+
+  if (productIds.length === 0) return { preparedItems: [], productMap: new Map() };
+
+  const products = await tx.product.findMany({
+    where: { id: { in: productIds }, userId },
+  });
+
+  const productMap = new Map(products.map((product) => [product.id, product]));
+  if (requestedIds.some((productId) => !productMap.has(productId))) {
+    throw new AppError(400, 'Uno de los productos vinculados no existe.');
+  }
+
+  const preparedItems = items.map((item) => {
+    const product = productMap.get(item.productId);
+    const unitCost = round2(item.unitCost);
+    return {
+      productId: product.id,
+      productName: product.name,
+      quantity: item.quantity,
+      unitCost,
+      lineTotal: round2(unitCost * item.quantity),
+    };
+  });
+
+  return { preparedItems, productMap };
+}
+
+function quantitiesByProduct(items) {
+  const quantities = new Map();
+  for (const item of items) {
+    if (!item.productId) continue;
+    quantities.set(item.productId, (quantities.get(item.productId) || 0) + item.quantity);
+  }
+  return quantities;
 }
 
 export async function listExpenses(req, res) {
@@ -129,30 +165,10 @@ export async function createExpense(req, res) {
   await assertExpenseCategory(expenseCategoryId, data.type, req.userId);
 
   const expense = await prisma.$transaction(async (tx) => {
-    const preparedItems = [];
-
-    if (data.type === 'INVESTMENT' && items.length > 0) {
-      const productIds = [...new Set(items.map((item) => item.productId))];
-      const products = await tx.product.findMany({
-        where: { id: { in: productIds }, userId: req.userId },
-      });
-      if (products.length !== productIds.length) {
-        throw new AppError(400, 'Uno de los productos vinculados no existe.');
-      }
-      const productMap = new Map(products.map((product) => [product.id, product]));
-
-      for (const item of items) {
-        const product = productMap.get(item.productId);
-        const unitCost = round2(item.unitCost);
-        preparedItems.push({
-          productId: product.id,
-          productName: product.name,
-          quantity: item.quantity,
-          unitCost,
-          lineTotal: round2(unitCost * item.quantity),
-        });
-      }
-    }
+    const { preparedItems } =
+      data.type === 'INVESTMENT'
+        ? await prepareInvestmentItems(tx, items, req.userId)
+        : { preparedItems: [] };
 
     const itemsTotal = sumBy(preparedItems, (item) => item.lineTotal);
     const finalAmount = round2(amount && amount > 0 ? amount : itemsTotal);
@@ -188,21 +204,90 @@ export async function createExpense(req, res) {
 export async function updateExpense(req, res) {
   const existing = await prisma.expense.findFirst({
     where: { id: req.params.id, userId: req.userId },
+    include: { items: true },
   });
   if (!existing) throw new AppError(404, 'Movimiento no encontrado.');
 
-  if (req.body.expenseCategoryId) {
-    await assertExpenseCategory(req.body.expenseCategoryId, existing.type, req.userId);
+  const { items, ...data } = req.body;
+
+  if (data.expenseCategoryId) {
+    await assertExpenseCategory(data.expenseCategoryId, existing.type, req.userId);
   }
 
-  const expense = await prisma.expense.update({
-    where: { id: existing.id },
-    data: req.body,
-    include: { expenseCategory: true, items: true },
+  const expense = await prisma.$transaction(async (tx) => {
+    if (items !== undefined) {
+      if (existing.type !== 'INVESTMENT') {
+        if (items.length > 0) {
+          throw new AppError(400, 'Los gastos operativos no pueden vincular stock.');
+        }
+      } else {
+        const oldProductIds = existing.items
+          .map((item) => item.productId)
+          .filter(Boolean);
+        const { preparedItems, productMap } = await prepareInvestmentItems(
+          tx,
+          items,
+          req.userId,
+          oldProductIds
+        );
+
+        const oldQuantities = quantitiesByProduct(existing.items);
+        const newQuantities = quantitiesByProduct(preparedItems);
+        const productIds = new Set([...oldQuantities.keys(), ...newQuantities.keys()]);
+
+        for (const productId of productIds) {
+          const oldQuantity = oldQuantities.get(productId) || 0;
+          const newQuantity = newQuantities.get(productId) || 0;
+          const delta = newQuantity - oldQuantity;
+          if (delta === 0) continue;
+
+          const product = productMap.get(productId);
+          if (!product) continue;
+
+          if (delta > 0) {
+            await tx.product.update({
+              where: { id: product.id },
+              data: { stock: { increment: delta } },
+            });
+          } else {
+            const decrement = -delta;
+            const updated = await tx.product.updateMany({
+              where: {
+                id: product.id,
+                userId: req.userId,
+                stock: { gte: decrement },
+              },
+              data: { stock: { decrement } },
+            });
+
+            if (updated.count === 0) {
+              throw new AppError(
+                409,
+                `Stock insuficiente de "${product.name}" para reducir la inversión. Disponible: ${product.stock}.`
+              );
+            }
+          }
+        }
+
+        await tx.expenseItem.deleteMany({ where: { expenseId: existing.id } });
+
+        if (preparedItems.length > 0) {
+          await tx.expenseItem.createMany({
+            data: preparedItems.map((item) => ({ ...item, expenseId: existing.id })),
+          });
+        }
+      }
+    }
+
+    return tx.expense.update({
+      where: { id: existing.id },
+      data,
+      include: { expenseCategory: true, items: true },
+    });
   });
 
   if (
-    req.body.receiptUrl !== undefined &&
+    data.receiptUrl !== undefined &&
     existing.receiptUrl &&
     existing.receiptUrl !== expense.receiptUrl
   ) {

@@ -1,6 +1,3 @@
-import { format } from 'date-fns';
-import { es } from 'date-fns/locale';
-
 const moneyFormatter = new Intl.NumberFormat('es-PE', {
   style: 'currency',
   currency: 'PEN',
@@ -54,17 +51,9 @@ export const formatDateTime = (value) =>
 export const formatShortDate = (value) =>
   value ? shortDateFormatter.format(new Date(value)) : '—';
 
-export const todayInput = (date = new Date()) => format(date, 'yyyy-MM-dd');
-
 export const limaInputDate = (date = new Date()) => limaISOFormatter.format(date);
 
-export const monthYearLabel = (date) =>
-  format(new Date(date), "MMMM 'de' yyyy", { locale: es });
-
 export const cn = (...classes) => classes.filter(Boolean).join(' ');
-
-export const truncate = (text, length = 42) =>
-  !text ? '' : text.length > length ? `${text.slice(0, length)}…` : text;
 
 export const initials = (name = '') =>
   name

@@ -14,5 +14,3 @@ export const useAuthStore = create(
     { name: 'emprendeflow-auth' }
   )
 );
-
-export const logoutLocal = () => useAuthStore.getState().clear();

@@ -24,7 +24,7 @@ try {
   // En serverless el filesystem puede ser limitado; Vercel Blob es el almacenamiento real.
 }
 
-export const ALLOWED_IMAGE_TYPES = [
+const ALLOWED_IMAGE_TYPES = [
   'image/jpeg',
   'image/png',
   'image/webp',
