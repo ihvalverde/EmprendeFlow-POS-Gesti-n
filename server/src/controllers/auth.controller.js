@@ -154,7 +154,7 @@ export async function logout(req, res) {
   const token = req.cookies?.[REFRESH_COOKIE];
   if (token) {
     await prisma.refreshToken
-      .updateMany({ where: { tokenHash: hashToken(token) }, data: { revokedAt: new Date() } })
+      .delete({ where: { tokenHash: hashToken(token) } })
       .catch(() => null);
   }
   clearRefreshCookie(res);

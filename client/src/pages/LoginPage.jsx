@@ -239,12 +239,13 @@ export default function LoginPage() {
                 onChange={update('password')}
                 error={errors.password}
                 autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
+                className="pr-12"
                 required
               />
               <button
                 type="button"
                 onClick={() => setShowPassword((value) => !value)}
-                className="absolute right-3 top-[38px] grid h-8 w-8 place-items-center rounded-lg text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800"
+                className="absolute right-3 top-[26px] grid h-8 w-8 place-items-center rounded-lg text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800"
                 aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
               >
                 {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}

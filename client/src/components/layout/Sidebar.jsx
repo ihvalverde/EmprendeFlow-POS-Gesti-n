@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import {
@@ -30,16 +30,15 @@ export default function Sidebar({ open = false, onClose = () => {} }) {
   const location = useLocation();
   const user = useAuthStore((state) => state.user);
   const clear = useAuthStore((state) => state.clear);
+  const [loggingOut, setLoggingOut] = useState(false);
 
   async function handleLogout() {
-    try {
-      await api.post('/auth/logout');
-    } catch {
-      // Si la sesión ya expiró, igual limpiamos el estado local.
-    }
+    if (loggingOut) return;
+    setLoggingOut(true);
     clear();
     toast.success('Sesión cerrada');
     navigate('/login');
+    void api.post('/auth/logout').catch(() => null);
   }
 
   useEffect(() => {
@@ -145,8 +144,9 @@ export default function Sidebar({ open = false, onClose = () => {} }) {
             </div>
             <button
               onClick={handleLogout}
+              disabled={loggingOut}
               title="Cerrar sesión"
-              className="grid h-8 w-8 place-items-center rounded-lg text-slate-400 transition hover:bg-rose-50 hover:text-rose-500 dark:hover:bg-rose-500/10"
+              className="grid h-8 w-8 place-items-center rounded-lg text-slate-400 transition hover:bg-rose-50 hover:text-rose-500 disabled:opacity-50 dark:hover:bg-rose-500/10"
             >
               <LogOut className="h-4 w-4" />
             </button>

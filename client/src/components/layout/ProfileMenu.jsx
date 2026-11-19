@@ -11,6 +11,7 @@ export default function ProfileMenu() {
   const user = useAuthStore((state) => state.user);
   const clear = useAuthStore((state) => state.clear);
   const [open, setOpen] = useState(false);
+  const [loggingOut, setLoggingOut] = useState(false);
   const menuRef = useRef(null);
 
   useEffect(() => {
@@ -33,15 +34,13 @@ export default function ProfileMenu() {
   }, [open]);
 
   async function handleLogout() {
+    if (loggingOut) return;
+    setLoggingOut(true);
     setOpen(false);
-    try {
-      await api.post('/auth/logout');
-    } catch {
-      // Si la sesión ya expiró, igual limpiamos el estado local.
-    }
     clear();
     toast.success('Sesión cerrada');
     navigate('/login');
+    void api.post('/auth/logout').catch(() => null);
   }
 
   function goToSettings() {
@@ -98,7 +97,8 @@ export default function ProfileMenu() {
             type="button"
             role="menuitem"
             onClick={handleLogout}
-            className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm font-semibold text-rose-600 transition hover:bg-rose-50 dark:text-rose-400 dark:hover:bg-rose-500/10"
+            disabled={loggingOut}
+            className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm font-semibold text-rose-600 transition hover:bg-rose-50 disabled:opacity-50 dark:text-rose-400 dark:hover:bg-rose-500/10"
           >
             <LogOut className="h-4 w-4" />
             Cerrar sesión
