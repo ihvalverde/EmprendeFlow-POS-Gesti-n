@@ -230,27 +230,27 @@ export default function LoginPage() {
               required
             />
 
-            <div className="relative">
-              <Input
-                label="Contraseña"
-                type={showPassword ? 'text' : 'password'}
-                placeholder={mode === 'register' ? 'Mínimo 8 caracteres' : 'Tu contraseña'}
-                value={form.password}
-                onChange={update('password')}
-                error={errors.password}
-                autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
-                className="pr-12"
-                required
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword((value) => !value)}
-                className="absolute right-3 top-[26px] grid h-8 w-8 place-items-center rounded-lg text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800"
-                aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
-              >
-                {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-              </button>
-            </div>
+            <Input
+              label="Contraseña"
+              type={showPassword ? 'text' : 'password'}
+              placeholder={mode === 'register' ? 'Mínimo 8 caracteres' : 'Tu contraseña'}
+              value={form.password}
+              onChange={update('password')}
+              error={errors.password}
+              autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
+              className="pr-11"
+              required
+              rightElement={
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((value) => !value)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 grid h-8 w-8 place-items-center rounded-lg text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800"
+                  aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
+                >
+                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
+              }
+            />
 
             <Button type="submit" className="w-full" size="lg" loading={loading}>
               {mode === 'login' ? 'Entrar a mi negocio' : 'Crear mi cuenta gratis'}

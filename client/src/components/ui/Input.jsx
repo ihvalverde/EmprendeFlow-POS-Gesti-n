@@ -31,7 +31,7 @@ function FieldWrapper({ label, hint, error, htmlFor, children, className }) {
 }
 
 export const Input = forwardRef(function Input(
-  { label, error, hint, className, containerClassName, id, ...props },
+  { label, error, hint, className, containerClassName, id, rightElement, ...props },
   ref
 ) {
   const autoId = useId();
@@ -44,17 +44,21 @@ export const Input = forwardRef(function Input(
       htmlFor={inputId}
       className={containerClassName}
     >
-      <input
-        id={inputId}
-        ref={ref}
-        className={cn(
-          baseField,
-          'h-11 px-3.5',
-          error ? errorBorder : normalBorder,
-          className
-        )}
-        {...props}
-      />
+      <div className="relative flex items-center">
+        <input
+          id={inputId}
+          ref={ref}
+          className={cn(
+            baseField,
+            'h-11 px-3.5',
+            rightElement ? 'pr-11' : null,
+            error ? errorBorder : normalBorder,
+            className
+          )}
+          {...props}
+        />
+        {rightElement}
+      </div>
     </FieldWrapper>
   );
 });
