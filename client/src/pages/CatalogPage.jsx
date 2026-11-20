@@ -108,7 +108,7 @@ export default function CatalogPage() {
   return (
     <div className="min-h-screen bg-slate-50 pb-8 dark:bg-slate-950">
       <header className="sticky top-0 z-30 border-b border-slate-200/80 bg-white/95 backdrop-blur dark:border-slate-800 dark:bg-slate-900/95">
-        <div className="mx-auto max-w-6xl px-4 py-4">
+        <div className="mx-auto max-w-6xl px-4 py-4 sm:px-6">
           <div className="flex items-center gap-3">
             <div className="grid h-11 w-11 place-items-center rounded-2xl bg-indigo-600 text-sm font-extrabold text-white shadow-sm">
               {catalog.store.name.slice(0, 2).toUpperCase()}
@@ -169,7 +169,7 @@ export default function CatalogPage() {
                 className="h-11 w-full rounded-xl border border-slate-200 bg-white pl-10 pr-3 text-sm text-slate-900 shadow-sm outline-none transition focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
               />
             </div>
-            <div className="flex gap-2 overflow-x-auto pb-1">
+            <div className="flex gap-3 overflow-x-auto pb-1">
               <button
                 type="button"
                 onClick={() => setCategoryId('all')}
@@ -200,7 +200,7 @@ export default function CatalogPage() {
         </div>
       </header>
 
-      <main className="mx-auto max-w-6xl px-4 py-6">
+      <main className="mx-auto max-w-6xl px-4 py-6 sm:px-6">
         {filteredProducts.length === 0 ? (
           <div className="rounded-3xl border border-dashed border-slate-300 bg-white p-10 text-center dark:border-slate-700 dark:bg-slate-900">
             <Package className="mx-auto h-12 w-12 text-slate-300" />
@@ -209,13 +209,13 @@ export default function CatalogPage() {
             </p>
           </div>
         ) : (
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-2 sm:gap-4 md:grid-cols-3 lg:grid-cols-4">
             {filteredProducts.map((product) => {
               const lowStock = product.stock <= 2;
               return (
                 <article
                   key={product.id}
-                  className="group overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md dark:border-slate-800 dark:bg-slate-900"
+                  className="group min-w-0 overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md dark:border-slate-800 dark:bg-slate-900"
                 >
                   <div className="relative aspect-square overflow-hidden bg-slate-100 dark:bg-slate-800">
                     {product.imageUrl ? (
