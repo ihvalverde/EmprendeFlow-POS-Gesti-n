@@ -175,11 +175,11 @@ export default function CatalogPage() {
                 className="h-11 w-full rounded-xl border border-slate-200 bg-white pl-10 pr-3 text-sm text-slate-900 shadow-sm outline-none transition focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
               />
             </div>
-            <div className="flex items-center gap-3 overflow-x-auto px-4 pb-2 no-scrollbar">
+            <div className="flex items-center gap-3 overflow-x-auto px-4 py-1 no-scrollbar after:content-[''] after:pr-4 after:shrink-0">
               <button
                 type="button"
                 onClick={() => setCategoryId('all')}
-                className={`shrink-0 whitespace-nowrap rounded-full px-4 py-2 text-sm font-bold transition ${
+                className={`shrink-0 whitespace-nowrap rounded-full px-4 py-2 text-sm font-medium transition ${
                   categoryId === 'all'
                     ? 'bg-indigo-600 text-white shadow-sm'
                     : 'bg-white text-slate-600 ring-1 ring-slate-200 hover:bg-slate-50 dark:bg-slate-900 dark:text-slate-300 dark:ring-slate-700'
@@ -192,7 +192,7 @@ export default function CatalogPage() {
                   key={category.id}
                   type="button"
                   onClick={() => setCategoryId(category.id)}
-                className={`shrink-0 whitespace-nowrap rounded-full px-4 py-2 text-sm font-bold transition ${
+                className={`shrink-0 whitespace-nowrap rounded-full px-4 py-2 text-sm font-medium transition ${
                   categoryId === category.id
                     ? 'bg-indigo-600 text-white shadow-sm'
                     : 'bg-white text-slate-600 ring-1 ring-slate-200 hover:bg-slate-50 dark:bg-slate-900 dark:text-slate-300 dark:ring-slate-700'
