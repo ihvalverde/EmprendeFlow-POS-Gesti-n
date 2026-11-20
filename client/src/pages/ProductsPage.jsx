@@ -344,7 +344,7 @@ export default function ProductsPage() {
                   </div>
                 </div>
 
-                <div className="mt-3 flex items-center justify-between gap-2 px-4">
+                <div className="mt-3 mb-4 flex items-center justify-between gap-2 px-4">
                   <span
                     className={cn(
                       'inline-flex items-center gap-1.5 rounded-lg px-2 py-1 text-[11px] font-bold',
