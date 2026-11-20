@@ -108,7 +108,7 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-5 overflow-x-hidden">
       <PageHeader
         title="Ajustes"
         subtitle="Configura los datos de tu negocio, preferencias y descarga tus reportes."
@@ -116,19 +116,22 @@ export default function SettingsPage() {
 
       <div className="grid items-start gap-4 lg:grid-cols-2">
         <Card className="p-5">
-          <div className="flex items-center gap-3 border-b border-slate-100 pb-4 dark:border-slate-800">
-            <div className="grid h-12 w-12 place-items-center rounded-2xl bg-indigo-600 text-sm font-extrabold text-white">
-              {initials(user?.name)}
+          <div className="flex flex-col gap-3 border-b border-slate-100 pb-4 sm:flex-row sm:items-center sm:justify-between dark:border-slate-800">
+            <div className="flex min-w-0 items-center gap-3">
+              <div className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-indigo-600 text-sm font-extrabold text-white">
+                {initials(user?.name)}
+              </div>
+              <div className="min-w-0">
+                <p className="truncate text-sm font-bold text-slate-900 dark:text-white">
+                  {user?.name}
+                </p>
+                <p className="flex min-w-0 items-center gap-1 text-xs text-slate-400">
+                  <Mail className="h-3 w-3 shrink-0" />
+                  <span className="truncate">{user?.email}</span>
+                </p>
+              </div>
             </div>
-            <div className="min-w-0">
-              <p className="truncate text-sm font-bold text-slate-900 dark:text-white">
-                {user?.name}
-              </p>
-              <p className="flex items-center gap-1 truncate text-xs text-slate-400">
-                <Mail className="h-3 w-3" /> {user?.email}
-              </p>
-            </div>
-            <Badge tone="emerald" dot className="ml-auto">
+            <Badge tone="emerald" dot className="w-fit shrink-0 sm:ml-auto">
               Activo
             </Badge>
           </div>
@@ -171,7 +174,7 @@ export default function SettingsPage() {
               placeholder="mi-tienda"
               hint="URL amigable para compartir tu catálogo."
             />
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col gap-3 pt-2 sm:flex-row sm:items-center sm:justify-between">
               <p className="text-[11px] text-slate-400">
                 Cuenta creada el {formatDate(user?.createdAt)}
               </p>
@@ -188,7 +191,7 @@ export default function SettingsPage() {
             <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
               Elige el tema que prefieras para trabajar.
             </p>
-            <div className="mt-4 grid grid-cols-2 gap-2">
+            <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
               {[
                 { value: 'light', label: 'Modo claro', icon: Sun },
                 { value: 'dark', label: 'Modo oscuro', icon: Moon },

@@ -13,7 +13,7 @@ export default function AppLayout() {
       <Sidebar open={mobileMenuOpen} onClose={closeMobileMenu} />
       <div className="lg:pl-64">
         <Topbar onOpenMenu={openMobileMenu} />
-        <main className="mx-auto w-full max-w-7xl px-4 pb-6 pt-5 sm:px-6 lg:px-8 lg:pb-10">
+        <main className="mx-auto w-full max-w-7xl overflow-x-hidden px-4 pb-6 pt-5 sm:px-6 lg:px-8 lg:pb-10">
           <Outlet />
         </main>
       </div>

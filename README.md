@@ -94,7 +94,7 @@ Frontend y API se despliegan como **dos proyectos independientes en Vercel**.
 - Instalable en Android, iOS y escritorio.
 - Service Worker con cache del shell y estrategia offline básica.
 - Tema claro y oscuro.
-- Diseño responsive con drawer lateral y menú de perfil.
+- Diseño responsive con drawer lateral, menú de perfil y ajustes adaptativos.
 - Accesos directos a “Registrar venta” y “Gastos”.
 
 ### 🛍️ Catálogo público

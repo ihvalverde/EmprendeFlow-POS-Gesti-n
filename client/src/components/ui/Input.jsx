@@ -3,7 +3,7 @@ import { ChevronDown } from 'lucide-react';
 import { cn } from '../../lib/format.js';
 
 const baseField =
-  'w-full rounded-xl border bg-white text-sm text-slate-900 shadow-sm transition placeholder:text-slate-400 focus:outline-none focus:ring-4 dark:bg-slate-900 dark:text-slate-100 dark:placeholder:text-slate-500';
+  'w-full min-w-0 rounded-xl border bg-white text-base text-slate-900 shadow-sm transition placeholder:text-slate-400 focus:outline-none focus:ring-4 sm:text-sm dark:bg-slate-900 dark:text-slate-100 dark:placeholder:text-slate-500';
 const normalBorder =
   'border-slate-200 focus:border-indigo-500 focus:ring-indigo-500/10 dark:border-slate-700 dark:focus:border-indigo-500';
 const errorBorder =
