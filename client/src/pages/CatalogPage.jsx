@@ -61,8 +61,14 @@ export default function CatalogPage() {
     });
   }, [products, search, categoryId]);
 
+  function normalizeWhatsAppNumber(value) {
+    const digits = String(value || '').replace(/\\D/g, '');
+    if (digits.length === 9) return `51${digits}`;
+    return digits;
+  }
+
   function consultWhatsApp(product) {
-    const phone = selectedPhone || whatsappNumbers[0];
+    const phone = normalizeWhatsAppNumber(selectedPhone || whatsappNumbers[0]);
     if (!phone) return;
 
     const message = [
@@ -169,11 +175,11 @@ export default function CatalogPage() {
                 className="h-11 w-full rounded-xl border border-slate-200 bg-white pl-10 pr-3 text-sm text-slate-900 shadow-sm outline-none transition focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
               />
             </div>
-            <div className="flex gap-3 overflow-x-auto pb-1">
+            <div className="flex items-center gap-3 overflow-x-auto px-4 pb-2 no-scrollbar">
               <button
                 type="button"
                 onClick={() => setCategoryId('all')}
-                className={`shrink-0 rounded-full px-4 py-2 text-xs font-bold transition ${
+                className={`shrink-0 whitespace-nowrap rounded-full px-4 py-2 text-sm font-bold transition ${
                   categoryId === 'all'
                     ? 'bg-indigo-600 text-white shadow-sm'
                     : 'bg-white text-slate-600 ring-1 ring-slate-200 hover:bg-slate-50 dark:bg-slate-900 dark:text-slate-300 dark:ring-slate-700'
@@ -186,11 +192,11 @@ export default function CatalogPage() {
                   key={category.id}
                   type="button"
                   onClick={() => setCategoryId(category.id)}
-                  className={`shrink-0 rounded-full px-4 py-2 text-xs font-bold transition ${
-                    categoryId === category.id
-                      ? 'bg-indigo-600 text-white shadow-sm'
-                      : 'bg-white text-slate-600 ring-1 ring-slate-200 hover:bg-slate-50 dark:bg-slate-900 dark:text-slate-300 dark:ring-slate-700'
-                  }`}
+                className={`shrink-0 whitespace-nowrap rounded-full px-4 py-2 text-sm font-bold transition ${
+                  categoryId === category.id
+                    ? 'bg-indigo-600 text-white shadow-sm'
+                    : 'bg-white text-slate-600 ring-1 ring-slate-200 hover:bg-slate-50 dark:bg-slate-900 dark:text-slate-300 dark:ring-slate-700'
+                }`}
                 >
                   {category.name}
                 </button>
@@ -254,15 +260,15 @@ export default function CatalogPage() {
                         </p>
                       )}
                     </div>
-                    <div className="flex items-center justify-between gap-3">
-                      <p className="text-lg font-extrabold text-slate-900 dark:text-white">
+                    <div className="mt-auto flex flex-col gap-2">
+                      <p className="text-sm font-extrabold text-slate-900 dark:text-white">
                         {formatMoney(product.listPrice)}
                       </p>
                       <button
                         type="button"
                         onClick={() => consultWhatsApp(product)}
                         disabled={!selectedPhone}
-                        className="inline-flex h-10 items-center gap-1.5 rounded-xl bg-emerald-500 px-3 text-xs font-bold text-white shadow-sm transition hover:bg-emerald-600 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50"
+                        className="flex w-full items-center justify-center gap-1.5 whitespace-nowrap rounded-xl bg-emerald-500 px-2.5 py-2 text-xs font-medium text-white shadow-sm transition hover:bg-emerald-600 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50"
                       >
                         <MessageCircle className="h-4 w-4" />
                         Consultar
