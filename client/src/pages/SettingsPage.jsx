@@ -108,14 +108,14 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="space-y-5 overflow-x-hidden">
+    <div className="w-full max-w-full space-y-5 overflow-x-hidden px-4 sm:px-6">
       <PageHeader
         title="Ajustes"
         subtitle="Configura los datos de tu negocio, preferencias y descarga tus reportes."
       />
 
-      <div className="grid items-start gap-4 lg:grid-cols-2">
-        <Card className="p-5">
+      <div className="grid w-full max-w-full items-start gap-4 lg:grid-cols-2">
+        <Card className="box-border w-full max-w-full overflow-hidden p-4 sm:p-6">
           <div className="flex flex-col gap-3 border-b border-slate-100 pb-4 sm:flex-row sm:items-center sm:justify-between dark:border-slate-800">
             <div className="flex min-w-0 items-center gap-3">
               <div className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-indigo-600 text-sm font-extrabold text-white">
@@ -136,7 +136,7 @@ export default function SettingsPage() {
             </Badge>
           </div>
 
-          <form onSubmit={handleSave} className="mt-4 space-y-4">
+          <form onSubmit={handleSave} className="mt-4 w-full max-w-full space-y-4">
             <Input
               label="Tu nombre"
               value={form.name}
@@ -174,7 +174,7 @@ export default function SettingsPage() {
               placeholder="mi-tienda"
               hint="URL amigable para compartir tu catálogo."
             />
-            <div className="flex flex-col gap-3 pt-2 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex w-full max-w-full flex-col gap-3 pt-2 sm:flex-row sm:items-center sm:justify-between">
               <p className="text-[11px] text-slate-400">
                 Cuenta creada el {formatDate(user?.createdAt)}
               </p>
@@ -186,7 +186,7 @@ export default function SettingsPage() {
         </Card>
 
         <div className="space-y-4">
-          <Card className="p-5">
+          <Card className="box-border w-full max-w-full overflow-hidden p-4 sm:p-6">
             <h3 className="text-sm font-bold text-slate-900 dark:text-white">Apariencia</h3>
             <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
               Elige el tema que prefieras para trabajar.
@@ -215,7 +215,7 @@ export default function SettingsPage() {
             </div>
           </Card>
 
-          <Card className="p-5">
+          <Card className="box-border w-full max-w-full overflow-hidden p-4 sm:p-6">
             <div className="flex items-start justify-between gap-3">
               <div>
                 <h3 className="text-sm font-bold text-slate-900 dark:text-white">
@@ -242,7 +242,7 @@ export default function SettingsPage() {
             </p>
           </Card>
 
-          <Card className="p-5">
+          <Card className="box-border w-full max-w-full overflow-hidden p-4 sm:p-6">
             <div className="flex items-start justify-between gap-3">
               <div>
                 <h3 className="text-sm font-bold text-slate-900 dark:text-white">Catálogo público</h3>
@@ -254,8 +254,8 @@ export default function SettingsPage() {
                 <MessageCircle className="h-5 w-5" />
               </div>
             </div>
-            <div className="mt-4 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs font-medium text-slate-600 dark:border-slate-700 dark:bg-slate-800/50 dark:text-slate-300">
-              <span className="block truncate">{catalogUrl}</span>
+            <div className="mt-4 w-full max-w-full min-w-0 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs font-medium text-slate-600 dark:border-slate-700 dark:bg-slate-800/50 dark:text-slate-300">
+              <span className="block max-w-full min-w-0 break-all">{catalogUrl}</span>
             </div>
             <div className="mt-4 flex flex-wrap gap-2">
               <Button type="button" variant="secondary" size="sm" onClick={copyCatalogLink}>
@@ -275,7 +275,7 @@ export default function SettingsPage() {
             </p>
           </Card>
 
-          <Card className="p-5">
+          <Card className="box-border w-full max-w-full overflow-hidden p-4 sm:p-6">
             <h3 className="text-sm font-bold text-slate-900 dark:text-white">Exportar mis datos</h3>
             <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
               Descarga reportes en CSV compatibles con Excel.
@@ -322,7 +322,7 @@ export default function SettingsPage() {
             </div>
           </Card>
 
-          <Card className="p-5">
+          <Card className="box-border w-full max-w-full overflow-hidden p-4 sm:p-6">
             <h3 className="text-sm font-bold text-slate-900 dark:text-white">Cuenta</h3>
             <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
               Cierra sesión de forma segura en este dispositivo.
@@ -334,7 +334,7 @@ export default function SettingsPage() {
         </div>
       </div>
 
-      <Card className="p-5">
+      <Card className="box-border w-full max-w-full overflow-hidden p-4 sm:p-6">
         <div className="flex flex-wrap items-center gap-3">
           <div className="grid h-10 w-10 place-items-center rounded-xl bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-300">
             <Building2 className="h-5 w-5" />

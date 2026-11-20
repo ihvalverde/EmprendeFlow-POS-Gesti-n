@@ -3,7 +3,7 @@ import { ChevronDown } from 'lucide-react';
 import { cn } from '../../lib/format.js';
 
 const baseField =
-  'w-full min-w-0 rounded-xl border bg-white text-base text-slate-900 shadow-sm transition placeholder:text-slate-400 focus:outline-none focus:ring-4 sm:text-sm dark:bg-slate-900 dark:text-slate-100 dark:placeholder:text-slate-500';
+  'box-border w-full max-w-full min-w-0 rounded-xl border bg-white text-base text-slate-900 shadow-sm transition placeholder:text-slate-400 focus:outline-none focus:ring-4 sm:text-sm dark:bg-slate-900 dark:text-slate-100 dark:placeholder:text-slate-500';
 const normalBorder =
   'border-slate-200 focus:border-indigo-500 focus:ring-indigo-500/10 dark:border-slate-700 dark:focus:border-indigo-500';
 const errorBorder =
@@ -11,20 +11,20 @@ const errorBorder =
 
 function FieldWrapper({ label, hint, error, htmlFor, children, className }) {
   return (
-    <div className={cn('space-y-1.5', className)}>
+    <div className={cn('w-full max-w-full min-w-0 space-y-1.5', className)}>
       {label && (
         <label
           htmlFor={htmlFor}
-          className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400"
+          className="block max-w-full min-w-0 break-words text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400"
         >
           {label}
         </label>
       )}
       {children}
       {error ? (
-        <p className="text-xs font-medium text-rose-500">{error}</p>
+        <p className="max-w-full min-w-0 break-words text-xs font-medium text-rose-500">{error}</p>
       ) : (
-        hint && <p className="text-xs text-slate-400 dark:text-slate-500">{hint}</p>
+        hint && <p className="max-w-full min-w-0 break-words text-xs text-slate-400 dark:text-slate-500">{hint}</p>
       )}
     </div>
   );
@@ -44,7 +44,7 @@ export const Input = forwardRef(function Input(
       htmlFor={inputId}
       className={containerClassName}
     >
-      <div className="relative flex items-center">
+      <div className="relative flex w-full max-w-full min-w-0 items-center">
         <input
           id={inputId}
           ref={ref}
