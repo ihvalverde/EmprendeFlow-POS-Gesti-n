@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import authRoutes from './auth.routes.js';
+import publicRoutes from './public.routes.js';
 import categoriesRoutes from './categories.routes.js';
 import productsRoutes from './products.routes.js';
 import salesRoutes from './sales.routes.js';
@@ -10,6 +11,7 @@ import uploadsRoutes, { mediaRouter } from './uploads.routes.js';
 
 const router = Router();
 
+router.use('/public', publicRoutes);
 router.use('/auth', authRoutes);
 router.use('/categories', categoriesRoutes);
 router.use('/products', productsRoutes);

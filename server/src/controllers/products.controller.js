@@ -28,6 +28,7 @@ export const productSchema = z.object({
   stock: z.coerce.number().int().min(0).max(1000000).default(0),
   lowStockThreshold: z.coerce.number().int().min(0).max(10000).default(2),
   archived: z.boolean().optional(),
+  isPublic: z.boolean().optional(),
 });
 
 export const productUpdateSchema = productSchema.partial();

@@ -4,9 +4,12 @@ import toast from 'react-hot-toast';
 import {
   Building2,
   Check,
+  Copy,
+  ExternalLink,
   Download,
   LogOut,
   Mail,
+  MessageCircle,
   Moon,
   Save,
   ShieldCheck,
@@ -37,6 +40,8 @@ export default function SettingsPage() {
   const [form, setForm] = useState({
     name: user?.name || '',
     businessName: user?.businessName || '',
+    whatsappPhone: user?.whatsappPhone || '',
+    catalogSlug: user?.catalogSlug || '',
   });
   const [errors, setErrors] = useState({});
   const [saving, setSaving] = useState(false);
@@ -56,6 +61,8 @@ export default function SettingsPage() {
       const { data } = await api.patch('/auth/me', {
         name: form.name.trim(),
         businessName: form.businessName.trim(),
+        whatsappPhone: form.whatsappPhone.trim() || null,
+        catalogSlug: form.catalogSlug.trim() || null,
       });
       setUser(data.user);
       toast.success('Datos actualizados');
@@ -75,6 +82,17 @@ export default function SettingsPage() {
     }
     clear();
     navigate('/login');
+  }
+
+  const catalogUrl = `${window.location.origin}/catalogo/${user?.catalogSlug || user?.id || ''}`;
+
+  async function copyCatalogLink() {
+    try {
+      await navigator.clipboard.writeText(catalogUrl);
+      toast.success('Enlace del catálogo copiado');
+    } catch {
+      toast.error('No se pudo copiar el enlace');
+    }
   }
 
   async function handleInstall() {
@@ -132,6 +150,26 @@ export default function SettingsPage() {
               error={errors.businessName}
               hint="Aparecerá en el panel y en tus reportes."
               required
+            />
+            <Input
+              label="WhatsApp del negocio"
+              value={form.whatsappPhone}
+              onChange={(event) =>
+                setForm((prev) => ({ ...prev, whatsappPhone: event.target.value }))
+              }
+              error={errors.whatsappPhone}
+              placeholder="51987654321"
+              hint="Número con código de país. Puedes agregar varios separados por coma."
+            />
+            <Input
+              label="Slug del catálogo público"
+              value={form.catalogSlug}
+              onChange={(event) =>
+                setForm((prev) => ({ ...prev, catalogSlug: event.target.value }))
+              }
+              error={errors.catalogSlug}
+              placeholder="mi-tienda"
+              hint="URL amigable para compartir tu catálogo."
             />
             <div className="flex items-center justify-between">
               <p className="text-[11px] text-slate-400">
@@ -198,6 +236,39 @@ export default function SettingsPage() {
             </Button>
             <p className="mt-2 flex items-center gap-1.5 text-[11px] text-slate-400">
               <ShieldCheck className="h-3.5 w-3.5" /> Funciona en Android, iOS y desktop.
+            </p>
+          </Card>
+
+          <Card className="p-5">
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <h3 className="text-sm font-bold text-slate-900 dark:text-white">Catálogo público</h3>
+                <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
+                  Comparte tu tienda en WhatsApp y recibe pedidos armados.
+                </p>
+              </div>
+              <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-indigo-50 text-indigo-600 dark:bg-indigo-500/10 dark:text-indigo-300">
+                <MessageCircle className="h-5 w-5" />
+              </div>
+            </div>
+            <div className="mt-4 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs font-medium text-slate-600 dark:border-slate-700 dark:bg-slate-800/50 dark:text-slate-300">
+              <span className="block truncate">{catalogUrl}</span>
+            </div>
+            <div className="mt-4 flex flex-wrap gap-2">
+              <Button type="button" variant="secondary" size="sm" onClick={copyCatalogLink}>
+                <Copy className="h-4 w-4" /> Copiar enlace
+              </Button>
+              <Button
+                type="button"
+                variant="secondary"
+                size="sm"
+                onClick={() => window.open(catalogUrl, '_blank', 'noopener,noreferrer')}
+              >
+                <ExternalLink className="h-4 w-4" /> Vista previa
+              </Button>
+            </div>
+            <p className="mt-3 text-[11px] text-slate-400">
+              Configura tu WhatsApp y el slug en el formulario de la izquierda, luego guarda.
             </p>
           </Card>
 

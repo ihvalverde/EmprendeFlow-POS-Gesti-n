@@ -97,6 +97,13 @@ Frontend y API se despliegan como **dos proyectos independientes en Vercel**.
 - Diseño responsive con drawer lateral y menú de perfil.
 - Accesos directos a “Registrar venta” y “Gastos”.
 
+### 🛍️ Catálogo público
+- Catálogo compartible por enlace para WhatsApp (`/catalogo/:slug`).
+- Búsqueda y filtros por categoría en tiempo real.
+- Carrito de pedido con cantidades, datos del cliente, pago y modalidad.
+- Envío del pedido armado a WhatsApp con totales en soles.
+- Control de visibilidad por producto (`isPublic`).
+
 ### 🔐 Seguridad
 - Contraseñas con `bcryptjs`.
 - Access tokens de corta duración y refresh tokens rotativos.
@@ -306,6 +313,7 @@ EmprendeFlow-POS-Gesti-n/
 | `GET` | `/dashboard/summary` | Métricas del dashboard |
 | `GET` | `/dashboard/charts` | Datos para gráficos |
 | `GET` | `/reports/*.{csv,pdf}` | Exportar inventario, ventas o gastos |
+| `GET` | `/public/catalog/:slug` | Catálogo público para compartir en WhatsApp |
 | `POST` | `/uploads` | Subir imagen a Vercel Blob |
 | `GET` | `/media/*` | Servir imagen privada |
 | `GET` | `/health` | Estado de la API |
@@ -319,7 +327,8 @@ Principales entidades de Prisma:
 - **User** — emprendimiento y credenciales.
 - **RefreshToken** — sesiones renovables con hash.
 - **Category** — árbol de categorías y subcategorías.
-- **Product** — inventario, costos, precios y stock.
+- **Product** — inventario, costos, precios, stock y visibilidad pública.
+- **User** — incluye número de WhatsApp y slug de catálogo.
 - **Sale / SaleItem** — ventas con snapshot histórico del producto.
 - **Expense / ExpenseItem** — gastos e inversiones con ítems vinculados.
 - **ExpenseCategory** — categorías específicas para gastos.

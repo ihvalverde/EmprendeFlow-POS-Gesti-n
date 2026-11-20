@@ -6,6 +6,8 @@ export function serializeUser(user) {
     name: user.name,
     email: user.email,
     businessName: user.businessName,
+    whatsappPhone: user.whatsappPhone || null,
+    catalogSlug: user.catalogSlug || null,
     createdAt: user.createdAt,
   };
 }

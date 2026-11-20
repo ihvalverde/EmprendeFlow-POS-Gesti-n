@@ -52,6 +52,7 @@ async function main() {
       email: demoEmail,
       passwordHash,
       businessName: 'Juguetes & Novedades Sofía',
+      whatsappPhone: '51903224014',
     },
   });
 

@@ -5,6 +5,7 @@ import AppLayout from './components/layout/AppLayout.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 import { useUiStore } from './stores/ui.js';
 import LoginPage from './pages/LoginPage.jsx';
+import CatalogPage from './pages/CatalogPage.jsx';
 import DashboardPage from './pages/DashboardPage.jsx';
 import SalesPage from './pages/SalesPage.jsx';
 import ProductsPage from './pages/ProductsPage.jsx';
@@ -48,6 +49,7 @@ export default function App() {
 
       <Routes>
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/catalogo/:slug" element={<CatalogPage />} />
 
         <Route element={<ProtectedRoute />}>
           <Route element={<AppLayout />}>

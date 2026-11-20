@@ -45,6 +45,28 @@ export const loginSchema = z.object({
 export const updateMeSchema = z.object({
   name: z.string().trim().min(2).max(80).optional(),
   businessName: z.string().trim().min(2).max(120).optional(),
+  whatsappPhone: z
+    .union([
+      z
+        .string()
+        .trim()
+        .regex(/^(\d{8,15})(,\s*\d{8,15})*$/, 'Número de WhatsApp inválido'),
+      z.null(),
+    ])
+    .optional()
+    .transform((value) => (value === '' ? null : value)),
+  catalogSlug: z
+    .union([
+      z
+        .string()
+        .trim()
+        .toLowerCase()
+        .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'Slug inválido')
+        .max(60),
+      z.null(),
+    ])
+    .optional()
+    .transform((value) => (value === '' ? null : value)),
 });
 
 async function issueSession(user, res) {

@@ -18,6 +18,7 @@ const emptyForm = {
   stock: '0',
   lowStockThreshold: '2',
   imageUrl: '',
+  isPublic: true,
 };
 
 export default function ProductFormModal({ open, onClose, product, categories, onSaved }) {
@@ -42,6 +43,7 @@ export default function ProductFormModal({ open, onClose, product, categories, o
             stock: String(product.stock ?? 0),
             lowStockThreshold: String(product.lowStockThreshold ?? 2),
             imageUrl: product.imageUrl || '',
+            isPublic: product.isPublic !== false,
           }
         : emptyForm
     );
@@ -78,6 +80,7 @@ export default function ProductFormModal({ open, onClose, product, categories, o
       lowStockThreshold:
         form.lowStockThreshold === '' ? 2 : Number(form.lowStockThreshold) || 0,
       imageUrl: form.imageUrl || null,
+      isPublic: Boolean(form.isPublic),
     };
 
     try {
@@ -226,6 +229,23 @@ export default function ProductFormModal({ open, onClose, product, categories, o
           value={form.imageUrl}
           onChange={(url) => setForm((prev) => ({ ...prev, imageUrl: url }))}
         />
+
+        <label className="flex items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-slate-50/70 px-4 py-3 dark:border-slate-800 dark:bg-slate-800/30">
+          <div>
+            <p className="text-sm font-bold text-slate-900 dark:text-white">Mostrar en catálogo público</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400">
+              Si lo desactivas, no aparecerá en el enlace compartido con clientes.
+            </p>
+          </div>
+          <input
+            type="checkbox"
+            checked={Boolean(form.isPublic)}
+            onChange={(event) =>
+              setForm((prev) => ({ ...prev, isPublic: event.target.checked }))
+            }
+            className="h-5 w-5 accent-indigo-600"
+          />
+        </label>
 
         <div className="grid grid-cols-3 gap-3 rounded-2xl border border-slate-200 bg-slate-50/70 p-4 dark:border-slate-800 dark:bg-slate-800/30">
           <div>
