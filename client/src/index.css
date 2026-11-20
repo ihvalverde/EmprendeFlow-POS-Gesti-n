@@ -14,14 +14,6 @@
   html {
     -webkit-tap-highlight-color: transparent;
     scroll-behavior: smooth;
-    max-width: 100%;
-    overflow-x: hidden;
-  }
-
-  body,
-  #root {
-    max-width: 100%;
-    overflow-x: hidden;
   }
 
   body {

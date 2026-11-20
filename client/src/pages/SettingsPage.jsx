@@ -108,35 +108,32 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="mx-auto w-full max-w-7xl space-y-6 overflow-x-hidden px-4 py-6 sm:px-6">
+    <div className="space-y-5">
       <PageHeader
         title="Ajustes"
         subtitle="Configura los datos de tu negocio, preferencias y descarga tus reportes."
       />
 
-      <div className="grid w-full max-w-full grid-cols-1 items-start gap-6 lg:grid-cols-2">
-        <Card className="block w-full max-w-full rounded-2xl p-4 sm:p-6 mb-6 box-border overflow-hidden">
-          <div className="flex flex-col gap-3 border-b border-slate-100 pb-4 sm:flex-row sm:items-center sm:justify-between dark:border-slate-800">
-            <div className="flex min-w-0 items-center gap-3">
-              <div className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-indigo-600 text-sm font-extrabold text-white">
-                {initials(user?.name)}
-              </div>
-              <div className="min-w-0">
-                <p className="truncate text-sm font-bold text-slate-900 dark:text-white">
-                  {user?.name}
-                </p>
-                <p className="flex min-w-0 items-center gap-1 text-xs text-slate-400">
-                  <Mail className="h-3 w-3 shrink-0" />
-                  <span className="truncate">{user?.email}</span>
-                </p>
-              </div>
+      <div className="grid items-start gap-4 lg:grid-cols-2">
+        <Card className="p-5">
+          <div className="flex items-center gap-3 border-b border-slate-100 pb-4 dark:border-slate-800">
+            <div className="grid h-12 w-12 place-items-center rounded-2xl bg-indigo-600 text-sm font-extrabold text-white">
+              {initials(user?.name)}
             </div>
-            <Badge tone="emerald" dot className="w-fit shrink-0 sm:ml-auto">
+            <div className="min-w-0">
+              <p className="truncate text-sm font-bold text-slate-900 dark:text-white">
+                {user?.name}
+              </p>
+              <p className="flex items-center gap-1 truncate text-xs text-slate-400">
+                <Mail className="h-3 w-3" /> {user?.email}
+              </p>
+            </div>
+            <Badge tone="emerald" dot className="ml-auto">
               Activo
             </Badge>
           </div>
 
-          <form onSubmit={handleSave} className="mt-4 w-full max-w-full space-y-3">
+          <form onSubmit={handleSave} className="mt-4 space-y-4">
             <Input
               label="Tu nombre"
               value={form.name}
@@ -174,7 +171,7 @@ export default function SettingsPage() {
               placeholder="mi-tienda"
               hint="URL amigable para compartir tu catálogo."
             />
-            <div className="flex w-full max-w-full flex-col gap-3 pt-2 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-center justify-between">
               <p className="text-[11px] text-slate-400">
                 Cuenta creada el {formatDate(user?.createdAt)}
               </p>
@@ -186,12 +183,12 @@ export default function SettingsPage() {
         </Card>
 
         <div className="space-y-4">
-          <Card className="block w-full max-w-full rounded-2xl p-4 sm:p-6 mb-6 box-border overflow-hidden">
+          <Card className="p-5">
             <h3 className="text-sm font-bold text-slate-900 dark:text-white">Apariencia</h3>
             <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
               Elige el tema que prefieras para trabajar.
             </p>
-            <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
+            <div className="mt-4 grid grid-cols-2 gap-2">
               {[
                 { value: 'light', label: 'Modo claro', icon: Sun },
                 { value: 'dark', label: 'Modo oscuro', icon: Moon },
@@ -215,7 +212,7 @@ export default function SettingsPage() {
             </div>
           </Card>
 
-          <Card className="block w-full max-w-full rounded-2xl p-4 sm:p-6 mb-6 box-border overflow-hidden">
+          <Card className="p-5">
             <div className="flex items-start justify-between gap-3">
               <div>
                 <h3 className="text-sm font-bold text-slate-900 dark:text-white">
@@ -242,7 +239,7 @@ export default function SettingsPage() {
             </p>
           </Card>
 
-          <Card className="block w-full max-w-full rounded-2xl p-4 sm:p-6 mb-6 box-border overflow-hidden">
+          <Card className="p-5">
             <div className="flex items-start justify-between gap-3">
               <div>
                 <h3 className="text-sm font-bold text-slate-900 dark:text-white">Catálogo público</h3>
@@ -275,7 +272,7 @@ export default function SettingsPage() {
             </p>
           </Card>
 
-          <Card className="block w-full max-w-full rounded-2xl p-4 sm:p-6 mb-6 box-border overflow-hidden">
+          <Card className="p-5">
             <h3 className="text-sm font-bold text-slate-900 dark:text-white">Exportar mis datos</h3>
             <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
               Descarga reportes en CSV compatibles con Excel.
@@ -322,7 +319,7 @@ export default function SettingsPage() {
             </div>
           </Card>
 
-          <Card className="block w-full max-w-full rounded-2xl p-4 sm:p-6 mb-6 box-border overflow-hidden">
+          <Card className="p-5">
             <h3 className="text-sm font-bold text-slate-900 dark:text-white">Cuenta</h3>
             <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
               Cierra sesión de forma segura en este dispositivo.
@@ -334,7 +331,7 @@ export default function SettingsPage() {
         </div>
       </div>
 
-      <Card className="block w-full max-w-full rounded-2xl p-4 sm:p-6 mb-6 box-border overflow-hidden">
+      <Card className="p-5">
         <div className="flex flex-wrap items-center gap-3">
           <div className="grid h-10 w-10 place-items-center rounded-xl bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-300">
             <Building2 className="h-5 w-5" />
