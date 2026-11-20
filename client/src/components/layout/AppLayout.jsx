@@ -9,11 +9,11 @@ export default function AppLayout() {
   const openMobileMenu = useCallback(() => setMobileMenuOpen(true), []);
 
   return (
-    <div className="min-h-screen bg-slate-100/70 dark:bg-slate-950">
+    <div className="min-h-screen w-full max-w-full overflow-x-hidden bg-slate-100/70 dark:bg-slate-950">
       <Sidebar open={mobileMenuOpen} onClose={closeMobileMenu} />
       <div className="lg:pl-64">
         <Topbar onOpenMenu={openMobileMenu} />
-        <main className="mx-auto w-full max-w-7xl overflow-x-hidden px-4 pb-6 pt-5 sm:px-6 lg:px-8 lg:pb-10">
+        <main className="mx-auto w-full max-w-full overflow-x-hidden px-4 pb-6 pt-5 sm:px-6 lg:px-8 lg:pb-10">
           <Outlet />
         </main>
       </div>

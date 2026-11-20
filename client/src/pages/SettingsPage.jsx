@@ -108,14 +108,14 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="w-full max-w-full space-y-5 overflow-x-hidden px-4 sm:px-6">
+    <div className="w-full max-w-full space-y-4 overflow-x-hidden px-4 py-5">
       <PageHeader
         title="Ajustes"
         subtitle="Configura los datos de tu negocio, preferencias y descarga tus reportes."
       />
 
       <div className="grid w-full max-w-full items-start gap-4 lg:grid-cols-2">
-        <Card className="box-border w-full max-w-full overflow-hidden p-4 sm:p-6">
+        <Card className="block w-full max-w-full rounded-2xl p-4 box-border overflow-hidden">
           <div className="flex flex-col gap-3 border-b border-slate-100 pb-4 sm:flex-row sm:items-center sm:justify-between dark:border-slate-800">
             <div className="flex min-w-0 items-center gap-3">
               <div className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-indigo-600 text-sm font-extrabold text-white">
@@ -136,7 +136,7 @@ export default function SettingsPage() {
             </Badge>
           </div>
 
-          <form onSubmit={handleSave} className="mt-4 w-full max-w-full space-y-4">
+          <form onSubmit={handleSave} className="mt-4 w-full max-w-full space-y-3">
             <Input
               label="Tu nombre"
               value={form.name}
@@ -186,7 +186,7 @@ export default function SettingsPage() {
         </Card>
 
         <div className="space-y-4">
-          <Card className="box-border w-full max-w-full overflow-hidden p-4 sm:p-6">
+          <Card className="block w-full max-w-full rounded-2xl p-4 box-border overflow-hidden">
             <h3 className="text-sm font-bold text-slate-900 dark:text-white">Apariencia</h3>
             <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
               Elige el tema que prefieras para trabajar.
@@ -215,7 +215,7 @@ export default function SettingsPage() {
             </div>
           </Card>
 
-          <Card className="box-border w-full max-w-full overflow-hidden p-4 sm:p-6">
+          <Card className="block w-full max-w-full rounded-2xl p-4 box-border overflow-hidden">
             <div className="flex items-start justify-between gap-3">
               <div>
                 <h3 className="text-sm font-bold text-slate-900 dark:text-white">
@@ -242,7 +242,7 @@ export default function SettingsPage() {
             </p>
           </Card>
 
-          <Card className="box-border w-full max-w-full overflow-hidden p-4 sm:p-6">
+          <Card className="block w-full max-w-full rounded-2xl p-4 box-border overflow-hidden">
             <div className="flex items-start justify-between gap-3">
               <div>
                 <h3 className="text-sm font-bold text-slate-900 dark:text-white">Catálogo público</h3>
@@ -275,7 +275,7 @@ export default function SettingsPage() {
             </p>
           </Card>
 
-          <Card className="box-border w-full max-w-full overflow-hidden p-4 sm:p-6">
+          <Card className="block w-full max-w-full rounded-2xl p-4 box-border overflow-hidden">
             <h3 className="text-sm font-bold text-slate-900 dark:text-white">Exportar mis datos</h3>
             <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
               Descarga reportes en CSV compatibles con Excel.
@@ -322,7 +322,7 @@ export default function SettingsPage() {
             </div>
           </Card>
 
-          <Card className="box-border w-full max-w-full overflow-hidden p-4 sm:p-6">
+          <Card className="block w-full max-w-full rounded-2xl p-4 box-border overflow-hidden">
             <h3 className="text-sm font-bold text-slate-900 dark:text-white">Cuenta</h3>
             <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
               Cierra sesión de forma segura en este dispositivo.
@@ -334,7 +334,7 @@ export default function SettingsPage() {
         </div>
       </div>
 
-      <Card className="box-border w-full max-w-full overflow-hidden p-4 sm:p-6">
+      <Card className="block w-full max-w-full rounded-2xl p-4 box-border overflow-hidden">
         <div className="flex flex-wrap items-center gap-3">
           <div className="grid h-10 w-10 place-items-center rounded-xl bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-300">
             <Building2 className="h-5 w-5" />
