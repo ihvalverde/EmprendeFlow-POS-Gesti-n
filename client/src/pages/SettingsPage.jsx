@@ -115,7 +115,7 @@ export default function SettingsPage() {
       />
 
       <div className="grid items-start gap-4 lg:grid-cols-2">
-        <Card className="p-5">
+        <Card className="min-w-0 p-6">
           <div className="flex items-center gap-3 border-b border-slate-100 pb-4 dark:border-slate-800">
             <div className="grid h-12 w-12 place-items-center rounded-2xl bg-indigo-600 text-sm font-extrabold text-white">
               {initials(user?.name)}
@@ -171,7 +171,7 @@ export default function SettingsPage() {
               placeholder="mi-tienda"
               hint="URL amigable para compartir tu catálogo."
             />
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
               <p className="text-[11px] text-slate-400">
                 Cuenta creada el {formatDate(user?.createdAt)}
               </p>
@@ -183,7 +183,7 @@ export default function SettingsPage() {
         </Card>
 
         <div className="space-y-4">
-          <Card className="p-5">
+          <Card className="min-w-0 p-6">
             <h3 className="text-sm font-bold text-slate-900 dark:text-white">Apariencia</h3>
             <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
               Elige el tema que prefieras para trabajar.
@@ -212,7 +212,7 @@ export default function SettingsPage() {
             </div>
           </Card>
 
-          <Card className="p-5">
+          <Card className="min-w-0 p-6">
             <div className="flex items-start justify-between gap-3">
               <div>
                 <h3 className="text-sm font-bold text-slate-900 dark:text-white">
@@ -239,7 +239,7 @@ export default function SettingsPage() {
             </p>
           </Card>
 
-          <Card className="p-5">
+          <Card className="min-w-0 p-6">
             <div className="flex items-start justify-between gap-3">
               <div>
                 <h3 className="text-sm font-bold text-slate-900 dark:text-white">Catálogo público</h3>
@@ -272,7 +272,7 @@ export default function SettingsPage() {
             </p>
           </Card>
 
-          <Card className="p-5">
+          <Card className="min-w-0 p-6">
             <h3 className="text-sm font-bold text-slate-900 dark:text-white">Exportar mis datos</h3>
             <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
               Descarga reportes en CSV compatibles con Excel.
@@ -300,7 +300,7 @@ export default function SettingsPage() {
               ].map((report) => (
                 <div
                   key={report.path}
-                  className="flex items-center justify-between gap-3 rounded-xl border border-slate-200 px-3 py-2.5 dark:border-slate-700"
+                  className="flex flex-col gap-2 rounded-xl border border-slate-200 px-3 py-2.5 sm:flex-row sm:items-center sm:justify-between dark:border-slate-700"
                 >
                   <div className="min-w-0">
                     <p className="text-xs font-bold text-slate-800 dark:text-slate-100">
@@ -319,7 +319,7 @@ export default function SettingsPage() {
             </div>
           </Card>
 
-          <Card className="p-5">
+          <Card className="min-w-0 p-6">
             <h3 className="text-sm font-bold text-slate-900 dark:text-white">Cuenta</h3>
             <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
               Cierra sesión de forma segura en este dispositivo.
@@ -331,7 +331,7 @@ export default function SettingsPage() {
         </div>
       </div>
 
-      <Card className="p-5">
+      <Card className="min-w-0 p-6">
         <div className="flex flex-wrap items-center gap-3">
           <div className="grid h-10 w-10 place-items-center rounded-xl bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-300">
             <Building2 className="h-5 w-5" />
